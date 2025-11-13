@@ -1,0 +1,69 @@
+services:
+    # PHP-приложение Laravel
+    app:
+        build:
+            context: .
+            dockerfile: Dockerfile
+        container_name: vision_app
+        working_dir: /var/www/html
+        volumes:
+            - .:/var/www/html
+        ports:
+            - "9527:8000"
+        depends_on:
+            - db
+            - redis
+            - smtp4dev
+        env_file:
+            - .env
+        command: php artisan serve --host=0.0.0.0 --port=8000
+
+    # База данных PostgreSQL
+    db:
+        image: postgres:17
+        container_name: vision_db
+        ports:
+            - "15432:5432"
+        environment:
+            POSTGRES_DB: ${DB_DATABASE}
+            POSTGRES_USER: ${DB_USERNAME}
+            POSTGRES_PASSWORD: ${DB_PASSWORD}
+        volumes:
+            - db_data:/var/lib/postgresql/data
+
+    # Redis
+    redis:
+        image: redis:7-alpine
+        container_name: vision_redis
+        ports:
+            - "16379:6379"
+        volumes:
+            - redis_data:/data
+
+    # Воркер очередей Laravel
+    queue:
+        build:
+            context: .
+            dockerfile: Dockerfile
+        container_name: vision_queue
+        working_dir: /var/www/html
+        volumes:
+            - .:/var/www/html
+        depends_on:
+            - db
+            - redis
+        command: php artisan queue:work --sleep=3 --tries=3
+
+    # SMTP тестирование
+    smtp4dev:
+        image: rnwood/smtp4dev:latest
+        container_name: vision_smtp
+        ports:
+            - "8025:80"
+            - "2587:25"
+        environment:
+            - ServerOptions__HostName=smtp4dev
+
+volumes:
+    db_data:
+    redis_data:
