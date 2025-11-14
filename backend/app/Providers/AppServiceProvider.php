@@ -14,10 +14,10 @@ use App\Domain\Patient\Repositories\PatientRepository;
 use App\Domain\User\Models\User;
 use App\Domain\User\Policies\UserPolicy;
 use App\Domain\User\Repositories\UserRepository;
+use App\Domain\User\Repositories\UserRepositoryInterface;
 use App\Infrastructure\Repositories\Eloquent\EloquentDepartmentRepository;
 use App\Infrastructure\Repositories\Eloquent\EloquentOrganizationRepository;
 use App\Infrastructure\Repositories\Eloquent\EloquentPatientRepository;
-use App\Infrastructure\Repositories\Eloquent\EloquentUserRepository;
 use App\Support\Multitenancy\Services\OrganizationResolver;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\ServiceProvider;
@@ -33,7 +33,7 @@ class AppServiceProvider extends ServiceProvider
             return new OrganizationResolver;
         });
 
-        $this->app->bind(UserRepository::class, EloquentUserRepository::class);
+        $this->app->bind(UserRepositoryInterface::class, UserRepository::class);
         $this->app->bind(DepartmentRepository::class, EloquentDepartmentRepository::class);
         $this->app->bind(OrganizationRepository::class, EloquentOrganizationRepository::class);
         $this->app->bind(PatientRepository::class, EloquentPatientRepository::class);

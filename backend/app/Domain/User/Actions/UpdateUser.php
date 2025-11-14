@@ -9,17 +9,17 @@ use App\Domain\User\Events\UserUpdated;
 use App\Domain\User\Guards\UserGuard;
 use App\Domain\User\Models\User;
 use App\Domain\User\Queries\UserQueries;
-use App\Domain\User\Repositories\UserRepository;
+use App\Domain\User\Repositories\UserRepositoryInterface;
 use App\Domain\RBAC\Queries\RoleQueries;
 use Illuminate\Support\Facades\DB;
 
 final readonly class UpdateUser
 {
     public function __construct(
-        private UserRepository $repository,
-        private UserQueries    $userQueries,
-        private UserGuard      $guard,
-        private RoleQueries    $roleQueries
+        private UserRepositoryInterface $repository,
+        private UserQueries             $userQueries,
+        private UserGuard               $guard,
+        private RoleQueries             $roleQueries
     ) {}
 
     public function execute(string $userUuid, array $data): User

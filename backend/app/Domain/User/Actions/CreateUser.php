@@ -8,7 +8,7 @@ use App\Domain\RBAC\Queries\RoleQueries;
 use App\Domain\User\Events\UserCreated;
 use App\Domain\User\Guards\UserGuard;
 use App\Domain\User\Models\User;
-use App\Domain\User\Repositories\UserRepository;
+use App\Domain\User\Repositories\UserRepositoryInterface;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
@@ -17,9 +17,9 @@ use Illuminate\Validation\ValidationException;
 final readonly class CreateUser
 {
     public function __construct(
-        private UserRepository $repository,
-        private RoleQueries    $roleQueries,
-        private UserGuard      $guard
+        private UserRepositoryInterface $repository,
+        private RoleQueries             $roleQueries,
+        private UserGuard               $guard
     ) {}
 
     /**

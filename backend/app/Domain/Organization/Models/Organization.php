@@ -11,8 +11,9 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Spatie\Multitenancy\Models\Tenant;
 
-class Organization extends Model
+class Organization extends Tenant
 {
     use HasUuid;
     use SoftDeletes;

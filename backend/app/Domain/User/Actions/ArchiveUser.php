@@ -6,14 +6,14 @@ namespace App\Domain\User\Actions;
 
 use App\Domain\User\Events\UserArchived;
 use App\Domain\User\Queries\UserQueries;
-use App\Domain\User\Repositories\UserRepository;
+use App\Domain\User\Repositories\UserRepositoryInterface;
 use Illuminate\Support\Facades\DB;
 
 final readonly class ArchiveUser
 {
     public function __construct(
-        private UserRepository $repository,
-        private UserQueries    $userQueries
+        private UserRepositoryInterface $repository,
+        private UserQueries             $userQueries
     ) {}
 
     /**

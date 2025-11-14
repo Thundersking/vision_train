@@ -5,10 +5,38 @@ declare(strict_types=1);
 namespace App\Domain\User\Repositories;
 
 use App\Domain\User\Models\User;
+use App\Support\Repositories\BaseRepository;
+use Illuminate\Database\Eloquent\Builder;
 
-interface UserRepository
+class UserRepository extends BaseRepository
 {
-    public function save(User $user): void;
+    protected static function modelClass(): string
+    {
+        return User::class;
+    }
 
-    public function delete(int $id): void;
+    protected function applyFilters(Builder $query, array $filters): void
+    {
+        if (isset($filters['organization_id'])) {
+            $query->where('organization_id', (int) $filters['organization_id']);
+        }
+
+        if (isset($filters['department_id'])) {
+            $query->where('department_id', (int) $filters['department_id']);
+        }
+
+        if (array_key_exists('is_active', $filters)) {
+            $query->where('is_active', (bool) $filters['is_active']);
+        }
+
+        if (!empty($filters['search'])) {
+            $s = $filters['search'];
+            $query->where(function ($qq) use ($s) {
+                $qq->where('first_name', 'like', "%{$s}%")
+                    ->orWhere('last_name', 'like', "%{$s}%")
+                    ->orWhere('email', 'like', "%{$s}%")
+                    ->orWhere('phone', 'like', "%{$s}%");
+            });
+        }
+    }
 }
