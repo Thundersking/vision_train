@@ -11,7 +11,7 @@ use App\Domain\User\Repositories\UserRepository;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Facades\DB;
 
-final class ToggleUserStatusAction
+final class DeleteUserAction
 {
     use RecordsAuditLog;
 
@@ -19,7 +19,10 @@ final class ToggleUserStatusAction
     {
     }
 
-    public function execute(string $uuid): User
+    /**
+     * @throws \Exception
+     */
+    public function execute(string $uuid): bool
     {
         $user = $this->repository->findByUuid($uuid);
 
@@ -28,19 +31,17 @@ final class ToggleUserStatusAction
         }
 
         return DB::transaction(function () use ($user) {
-            $oldData = $user->toArray();
-            $newStatus = !$user->is_active;
+            $userData = $user->toArray();
 
-            $user->update(['is_active' => $newStatus]);
+            $result = $user->delete();
 
             $this->recordAudit(
-                action: AuditActionType::UPDATED,
+                action: AuditActionType::DELETED,
                 entity: $user,
-                oldData: ['is_active' => !$newStatus],
-                newData: ['is_active' => $newStatus]
+                oldData: array_diff_key($userData, ['password' => null])
             );
 
-            return $user->refresh();
+            return $result;
         });
     }
 }

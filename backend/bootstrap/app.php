@@ -64,10 +64,19 @@ return Application::configure(basePath: dirname(__DIR__))
         });
 
         // 404 Not Found
-        $exceptions->render(function (NotFoundHttpException|RouteNotFoundException $e, Request $request) {
+        $exceptions->render(function (NotFoundHttpException $e, Request $request) {
             if ($request->is('api/*') || $request->expectsJson()) {
                 return response()->json([
-                    'message' => 'Маршрут или ресурс не найден.',
+                    'message' => 'Запись не найдена',
+                    'code' => 404
+                ], 404);
+            }
+        });
+
+        $exceptions->render(function (RouteNotFoundException $e, Request $request) {
+            if ($request->is('api/*') || $request->expectsJson()) {
+                return response()->json([
+                    'message' => 'Маршрут не найден.',
                     'code' => 404
                 ], 404);
             }

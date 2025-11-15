@@ -3,6 +3,7 @@
 namespace App\Domain\User\Controllers;
 
 use App\Domain\User\Actions\CreateUserAction;
+use App\Domain\User\Actions\DeleteUserAction;
 use App\Domain\User\Actions\ToggleUserStatusAction;
 use App\Domain\User\Actions\UpdateUserAction;
 use App\Domain\User\Repositories\UserRepository;
@@ -13,6 +14,7 @@ use App\Domain\User\Resources\UserDetailResource;
 use App\Domain\User\Resources\UserListResource;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Routing\Controller;
 use Illuminate\Validation\ValidationException;
@@ -88,5 +90,23 @@ final class UserController extends Controller
         $updatedUser = $action->execute($uuid);
 
         return new UserDetailResource($updatedUser);
+    }
+
+    /**
+     * @throws AuthorizationException
+     * @throws \Exception
+     */
+    public function destroy(string $uuid, DeleteUserAction $action): JsonResponse
+    {
+        $user = $this->repository->findByUuid($uuid);
+
+//        $this->authorize('delete', $user);
+
+        $action->execute($uuid);
+
+        return response()->json([
+            'message' => 'Пользователь успешно удален',
+            'code' => 200
+        ]);
     }
 }

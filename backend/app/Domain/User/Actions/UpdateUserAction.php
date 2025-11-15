@@ -9,6 +9,7 @@ use App\Domain\Shared\Traits\RecordsAuditLog;
 use App\Domain\User\Guards\UserGuard;
 use App\Domain\User\Models\User;
 use App\Domain\User\Repositories\UserRepository;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\ValidationException;
@@ -30,7 +31,7 @@ final class UpdateUserAction
         $user = $this->repository->findByUuid($uuid);
 
         if (!$user) {
-            throw new \Exception('Пользователь не найден');
+            throw new ModelNotFoundException();
         }
 
         // Проверяем уникальность email если он изменяется
