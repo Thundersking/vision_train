@@ -6,7 +6,7 @@ namespace App\Domain\User\Requests;
 
 use App\Support\Requests\FormRequest;
 
-class UserCreateRequest extends FormRequest
+class UserUpdateRequest extends FormRequest
 {
     protected function prepareForValidation(): void
     {
@@ -22,13 +22,14 @@ class UserCreateRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'first_name' => ['required', 'string', 'max:100'],
-            'last_name' => ['required', 'string', 'max:100'],
+            'first_name' => ['sometimes', 'required', 'string', 'max:100'],
+            'last_name' => ['sometimes', 'required', 'string', 'max:100'],
             'middle_name' => ['nullable', 'string', 'max:100'],
-            'email' => ['required', 'email', 'max:100'],
+            'email' => ['sometimes', 'required', 'email', 'max:100'],
             'phone' => ['nullable', 'string', 'max:20'],
-            'department_id' => ['required', 'integer', 'exists:departments,id'],
-            'role_id' => ['required', 'integer', 'exists:roles,id'],
+            'department_id' => ['sometimes', 'required', 'integer', 'exists:departments,id'],
+            'role_id' => ['sometimes', 'required', 'integer', 'exists:roles,id'],
+            'is_active' => ['sometimes', 'boolean'],
         ];
     }
 }

@@ -1,10 +1,9 @@
 <?php
 
-use App\Application\Api\UserController;
-use Illuminate\Support\Facades\Route;
+$routePath = __DIR__ . '/groups';
 
-// TODO: разобраться с тенантами
-//Route::middleware(['tenant'])->group(function () {
-//});
-
-Route::get('/user', [UserController::class, 'index']);
+foreach (scandir($routePath) as $file) {
+    if (pathinfo($file, PATHINFO_EXTENSION) === 'php') {
+        require $routePath . '/' . $file;
+    }
+}

@@ -6,6 +6,8 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Ramsey\Uuid\Nonstandard\Uuid;
 
 abstract class BaseRepository
 {
@@ -45,6 +47,10 @@ abstract class BaseRepository
 
     public function findByUuid(string $uuid, string $column = 'uuid'): ?Model
     {
+        if (!Uuid::isValid($uuid)) {
+            throw (new ModelNotFoundException)->setModel(static::modelClass());
+        }
+
         return $this->newQuery()->where($column, $uuid)->first();
     }
 
@@ -73,25 +79,36 @@ abstract class BaseRepository
         return $record && $record->restore();
     }
 
-    public function paginate(
-        array $filters = [],
-        int $perPage = 15,
-        ?string $sortBy = 'created_at',
-        ?string $sortOrder = 'desc'
-    ): LengthAwarePaginator {
+    public function paginate(array $filters = []): LengthAwarePaginator
+    {
         $query = $this->newQuery();
+
+        $perPage = (int)($filters['per_page'] ?? 15);
+        $sortBy = $filters['sort_by'] ?? 'created_at';
+        $sort = $filters['sort'] ?? 'desc';
+
+        unset($filters['per_page'], $filters['sort_by'], $filters['sort']);
+
         $this->applyFilters($query, $filters);
-        if ($sortBy) {
-            $query->orderBy($sortBy, $sortOrder ?? 'desc');
+
+        $sort = in_array(strtolower((string)$sort), ['asc', 'desc'], true) ? $sort : 'desc';
+        if (!empty($sortBy)) {
+            $query->orderBy($sortBy, $sort);
         }
+
+        if ($perPage <= 0) {
+            $perPage = 15;
+        }
+
         return $query->paginate($perPage);
     }
 
     public function get(
-        array $filters = [],
+        array   $filters = [],
         ?string $sortBy = null,
         ?string $sortOrder = 'asc'
-    ): Collection {
+    ): Collection
+    {
         $query = $this->newQuery();
         $this->applyFilters($query, $filters);
         if ($sortBy) {
@@ -120,6 +137,6 @@ abstract class BaseRepository
         $model = static::modelClass();
         /** @var Model $instance */
         $instance = new $model();
-        return (bool) $instance->newQuery()->insert($rows);
+        return (bool)$instance->newQuery()->insert($rows);
     }
 }

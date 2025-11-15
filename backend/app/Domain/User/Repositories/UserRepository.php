@@ -39,4 +39,19 @@ class UserRepository extends BaseRepository
             });
         }
     }
+
+    public function emailExists(string $email): bool
+    {
+        return $this->newQuery()
+            ->where('email', $email)
+            ->exists();
+    }
+
+    public function emailExistsExceptUserUuid(string $email, string $exceptUuid): bool
+    {
+        return $this->newQuery()
+            ->where('email', $email)
+            ->where('uuid', '!=', $exceptUuid)
+            ->exists();
+    }
 }

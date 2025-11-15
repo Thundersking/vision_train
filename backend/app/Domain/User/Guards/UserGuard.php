@@ -3,19 +3,20 @@
 declare(strict_types=1);
 
 namespace App\Domain\User\Guards;
-use App\Domain\User\Queries\UserQueries;
+use App\Domain\User\Repositories\UserRepository;
 use Illuminate\Validation\ValidationException;
 
 final readonly class UserGuard
 {
-    public function __construct(private UserQueries $queries) {}
+    public function __construct(private UserRepository $repository) {}
 
     /**
      * Проверка на уникальность email в организации при создании пользователя.
+     * @throws ValidationException
      */
-    public function ensureEmailUnique(int $orgId, string $email): void
+    public function ensureEmailUnique(string $email): void
     {
-        if ($this->queries->emailExists($orgId, mb_strtolower($email))) {
+        if ($this->repository->emailExists(mb_strtolower($email))) {
             throw ValidationException::withMessages([
                 'email' => 'Email уже используется в организации',
             ]);
@@ -26,9 +27,9 @@ final readonly class UserGuard
      * Проверка на уникальность email в организации при обновлении, исключая текущего пользователя.
      * @throws ValidationException
      */
-    public function ensureEmailUniqueExceptUuid(int $orgId, string $email, string $exceptUuid): void
+    public function ensureEmailUniqueExceptUuid(string $email, string $exceptUuid): void
     {
-        if ($this->queries->emailExistsExceptUserUuid($orgId, $email, $exceptUuid)) {
+        if ($this->repository->emailExistsExceptUserUuid($email, $exceptUuid)) {
             throw ValidationException::withMessages([
                 'email' => 'Email уже используется в организации',
             ]);

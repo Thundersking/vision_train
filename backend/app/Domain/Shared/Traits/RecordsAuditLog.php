@@ -4,6 +4,7 @@ namespace App\Domain\Shared\Traits;
 
 use App\Domain\Shared\Enums\AuditActionType;
 use App\Domain\Shared\Models\AuditLog;
+use Spatie\Multitenancy\Models\Tenant;
 
 trait RecordsAuditLog
 {
@@ -18,7 +19,7 @@ trait RecordsAuditLog
         ?array $oldData = null,
         ?array $newData = null
     ): void {
-        $organizationId = $entity->organization_id ?? session('current_organization_id');
+        $organizationId = $this->getOrganizationId($entity);
 
         $entityName = strtolower(class_basename($entity));
         $actionType = "{$entityName}.{$action->value}";
@@ -51,6 +52,22 @@ trait RecordsAuditLog
             'user_agent' => request()->userAgent(),
             'created_at' => now(),
         ]);
+    }
+
+    protected function getOrganizationId($entity = null): ?int
+    {
+        // Spatie Multitenancy — стандартный способ
+        $tenant = Tenant::current();
+        if ($tenant) {
+            return $tenant->id;
+        }
+
+        // Fallback: если в сущности есть organization_id
+        if ($entity && isset($entity->organization_id)) {
+            return $entity->organization_id;
+        }
+
+        return null;
     }
 
     private function excludeFields(array $data, object $entity): array

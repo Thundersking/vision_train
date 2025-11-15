@@ -5,14 +5,14 @@ declare(strict_types=1);
 namespace App\Domain\Patient\Guards;
 
 use App\Domain\Patient\Queries\PatientQueries;
-use App\Domain\User\Queries\UserQueries;
+use App\Domain\User\Repositories\UserRepository;
 use Illuminate\Validation\ValidationException;
 
 final readonly class PatientGuard
 {
     public function __construct(
         private PatientQueries $queries,
-        private UserQueries $userQueries
+        private UserRepository $userRepository
     ) {}
 
     /**
@@ -32,7 +32,7 @@ final readonly class PatientGuard
      */
     public function ensureDoctorFromSameOrganization(int $doctorId, int $organizationId): void
     {
-        $doctor = $this->userQueries->findActiveInOrganization($doctorId, $organizationId);
+        $doctor = $this->userRepository->findActiveInOrganization($doctorId, $organizationId);
 
         if (!$doctor) {
             throw ValidationException::withMessages([
