@@ -54,4 +54,11 @@ class UserRepository extends BaseRepository
             ->where('uuid', '!=', $exceptUuid)
             ->exists();
     }
+
+    public function findByEmail(string $email): ?User
+    {
+        return $this->newQuery()
+            ->where('email', $email)
+            ->first();
+    }
 }

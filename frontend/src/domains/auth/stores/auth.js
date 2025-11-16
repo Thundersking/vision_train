@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia'
 import Cookies from 'js-cookie'
-import router from '../router'
-import {authService} from "@/core/services/auth.service.js";
+import router from '../../../core/router/index.js'
+import {authService} from "@/domains/auth/services/auth.service.js";
 
 export const useAuthStore = defineStore('auth', {
     state: () => ({

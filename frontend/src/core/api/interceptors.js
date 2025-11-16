@@ -1,5 +1,5 @@
 import apiClient from './client'
-import {useAuthStore} from '../store/auth'
+import {useAuthStore} from '../../domains/auth/stores/auth.js'
 import router from '../router'
 import {useToast} from 'primevue/usetoast';
 

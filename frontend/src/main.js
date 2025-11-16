@@ -12,11 +12,16 @@ import '@/assets/styles.css'
 
 import {
     Toast,
+    InputText,
+    Password, Button,
 } from 'primevue';
 
 import App from './App.vue'
 import router from './core/router'
 import './core/api/interceptors'
+import BaseForm from "@/common/components/BaseForm.vue";
+import FormInput from "@/common/components/FormInput.vue";
+import FormPassword from "@/common/components/FormPassword.vue";
 
 
 const MyCustomPreset = definePreset(Lara, {
@@ -130,5 +135,11 @@ app.directive('tooltip', Tooltip)
 app.use(ToastService)
 app.use(ConfirmationService)
 
+app.component('BaseForm', BaseForm);
+app.component('FormInput', FormInput);
+app.component('FormPassword', FormPassword);
+app.component('Button', Button);
+app.component('Password', Password);
+app.component('InputText', InputText);
 app.component('Toast', Toast);
 app.mount('#app')

@@ -1,6 +1,6 @@
 import { ref, computed, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-import { useApi } from './useApi'
+import { useApi } from './useApi.js'
 
 /**
  * @typedef {Object} TableStateOptions
