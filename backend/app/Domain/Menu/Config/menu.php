@@ -4,88 +4,88 @@ use App\Domain\RBAC\Enums\Permission;
 
 return [
     'dashboard' => [
-        'title' => 'Главная',
+        'label' => 'Главная',
         'icon' => 'pi pi-home',
-        'route' => '/dashboard',
+        'path' => '/dashboard',
         'permission' => null, // Доступно всем
     ],
 
     'users' => [
-        'title' => 'Пользователи',
+        'label' => 'Пользователи',
         'icon' => 'pi pi-users',
-        'route' => '/users',
+        'path' => '/users',
         'permission' => Permission::USERS_VIEW->value,
     ],
 
     'departments' => [
-        'title' => 'Отделения',
+        'label' => 'Отделения',
         'icon' => 'pi pi-building',
-        'route' => '/departments',
+        'path' => '/departments',
         'permission' => Permission::DEPARTMENTS_VIEW->value,
     ],
 
     'patients' => [
-        'title' => 'Пациенты',
+        'label' => 'Пациенты',
         'icon' => 'pi pi-user',
-        'route' => '/patients',
+        'path' => '/patients',
         'permission' => Permission::PATIENTS_VIEW->value,
     ],
 
     'exercises' => [
-        'title' => 'Упражнения',
+        'label' => 'Упражнения',
         'icon' => 'pi pi-play',
-        'route' => '/exercises',
+        'path' => '/exercises',
         'permission' => Permission::EXERCISES_VIEW->value,
     ],
 
     'programs' => [
-        'title' => 'Программы реабилитации',
+        'label' => 'Программы реабилитации',
         'icon' => 'pi pi-list',
-        'route' => '/programs',
+        'path' => '/programs',
         'permission' => Permission::PROGRAMS_VIEW->value,
     ],
 
     'reports' => [
-        'title' => 'Отчеты',
+        'label' => 'Отчеты',
         'icon' => 'pi pi-chart-bar',
-        'route' => '/reports',
+        'path' => '/reports',
         'permission' => Permission::REPORTS_VIEW->value,
     ],
 
     'organization' => [
-        'title' => 'Организация',
+        'label' => 'Организация',
         'icon' => 'pi pi-building-columns',
-        'route' => '/organization',
+        'path' => '/organization',
         'permission' => Permission::ORGANIZATION_VIEW->value,
     ],
 
     'settings' => [
-        'title' => 'Настройки',
+        'label' => 'Настройки',
         'icon' => 'pi pi-cog',
-        'route' => '/settings',
+        'path' => '/settings',
         'permission' => Permission::SETTINGS_VIEW->value,
     ],
 
     // Системные разделы (только для super_admin)
     'system' => [
-        'title' => 'Система',
+        'label' => 'Система',
         'icon' => 'pi pi-server',
-        'route' => '/system',
+        'path' => '/system',
         'permission' => Permission::SYSTEM_TENANTS_MANAGE->value,
         'children' => [
             'system.tenants' => [
-                'title' => 'Тенанты',
-                'route' => '/system/tenants',
+                'label' => 'Тенанты',
+                'path' => '/system/tenants',
                 'permission' => Permission::SYSTEM_TENANTS_MANAGE->value,
             ],
             'system.users' => [
-                'title' => 'Системные пользователи',
-                'route' => '/system/users',
+                'label' => 'Системные пользователи',
+                'path' => '/system/users',
                 'permission' => Permission::SYSTEM_USERS_MANAGE->value,
             ],
             'system.logs' => [
-                'title' => 'Логи',
-                'route' => '/system/logs',
+                'label' => 'Логи',
+                'path' => '/system/logs',
                 'permission' => Permission::SYSTEM_LOGS_VIEW->value,
             ],
         ]

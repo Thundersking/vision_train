@@ -26,9 +26,9 @@ class MenuService
             if ($this->userCanAccessMenuItem($user, $menuItem)) {
                 $filteredItem = [
                     'key' => $key,
-                    'title' => $menuItem['title'],
+                    'label' => $menuItem['label'],
                     'icon' => $menuItem['icon'] ?? null,
-                    'route' => $menuItem['route'],
+                    'path' => $menuItem['path'],
                 ];
 
                 // Если есть дочерние элементы, фильтруем их тоже
@@ -39,8 +39,8 @@ class MenuService
                         if ($this->userCanAccessMenuItem($user, $childItem)) {
                             $filteredChildren[] = [
                                 'key' => $childKey,
-                                'title' => $childItem['title'],
-                                'route' => $childItem['route'],
+                                'label' => $childItem['label'],
+                                'path' => $childItem['path'],
                             ];
                         }
                     }
