@@ -8,7 +8,6 @@ export class Login extends BaseModel {
 
         this.email = data.email ?? '';
         this.password = data.password ?? '';
-        this.device_fingerprint = data.device_fingerprint ?? '';
     }
 
     toApiFormat() {
@@ -23,7 +22,7 @@ export class Login extends BaseModel {
             },
             password: {
                 required: helpers.withMessage('Пароль обязателен для заполнения', required),
-                minLength: helpers.withMessage('Минимум 1 символ', minLength(1))
+                minLength: helpers.withMessage('Минимум 6 символов', minLength(6))
             }
         };
     }

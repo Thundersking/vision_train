@@ -9,7 +9,8 @@
         :toggleMask="toggleMask"
         :placeholder="placeholder"
         :disabled="disabled"
-        :class="['w-full', {'p-invalid': hasError}]"
+        :invalid="hasError"
+        class="w-full"
         inputClass="w-full"
         v-bind="$attrs"
     />
@@ -86,11 +87,9 @@ export default {
   },
 
   methods: {
-    updateField(next) {
-      const updated = { ...(this.modelValue || {}) };
-      updated[this.name] = next;
+    updateField(value) {
+      this.modelValue[this.name] = value;
 
-      this.$emit('update:modelValue', updated);
       this.touchField();
     },
 
