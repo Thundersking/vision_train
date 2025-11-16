@@ -10,6 +10,29 @@ export const useAuthStore = defineStore('auth', {
         isAuthenticated: !!localStorage.getItem('token'),
     }),
 
+    getters: {
+        // Информация о пользователе
+        userName: (state) => state.user?.name || 'Пользователь',
+        userEmail: (state) => state.user?.email,
+        userInitials: (state) => state.user?.initials || 'У',
+        userRoles: (state) => state.user?.roles || [],
+        userPermissions: (state) => state.user?.permissions || [],
+        
+        // Проверки разрешений
+        hasPermission: (state) => (permission) => {
+            return state.user?.permissions?.includes(permission) || false
+        },
+        
+        hasRole: (state) => (role) => {
+            return state.user?.roles?.includes(role) || false
+        },
+        
+        // Организационная информация
+        organizationId: (state) => state.user?.organization_id,
+        departmentId: (state) => state.user?.department_id,
+        timezone: (state) => state.user?.timezone_display || 'UTC'
+    },
+
     actions: {
         setToken(token) {
             this.token = token
@@ -17,13 +40,21 @@ export const useAuthStore = defineStore('auth', {
             this.isAuthenticated = !!token
         },
 
+        setUser(user) {
+            this.user = user
+            localStorage.setItem('user', JSON.stringify(user))
+        },
+
         async login(credentials) {
             try {
                 const response = await authService.login(credentials)
-                const { access_token, user } = response.data
+                const { access_token, user, token_type, expires_in } = response.data
 
-                // Сохраняем токены
+                // Сохраняем access token
                 this.setToken(access_token)
+                
+                // Сохраняем пользователя
+                this.setUser(user)
 
                 this.isAuthenticated = true
 
