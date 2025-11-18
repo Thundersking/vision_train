@@ -19,9 +19,9 @@ import {
 import App from './App.vue'
 import router from './core/router'
 import './core/api/interceptors'
-import BaseForm from "@/common/components/BaseForm.vue";
-import FormInput from "@/common/components/FormInput.vue";
-import FormPassword from "@/common/components/FormPassword.vue";
+import BaseForm from "@/common/components/form/BaseForm.vue";
+import FormInput from "@/common/components/form/FormInput.vue";
+import FormPassword from "@/common/components/form/FormPassword.vue";
 
 
 const MyCustomPreset = definePreset(Lara, {
