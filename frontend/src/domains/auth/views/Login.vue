@@ -24,8 +24,9 @@ export default {
 
       return await this.loginStore.login(payload);
     },
-    
+
     onLoginSuccess() {
+      console.log('onLoginSuccess')
       // Переход на главную страницу после успешного логина
       this.$router.push('/dashboard');
     }
@@ -34,43 +35,41 @@ export default {
 </script>
 
 <template>
-  <div class="min-h-screen bg-gradient-to-br from-blue-50 to-cyan-100 flex items-center justify-center p-4">
-    <div class="w-full max-w-md bg-white/90 backdrop-blur-sm rounded-xl shadow-xl p-8 border border-blue-200/50">
+  <div class="bg-white/90 backdrop-blur-sm rounded-xl shadow-xl p-8 border border-blue-200/50 dark:bg-gray-900/90 dark:border-gray-700">
 
-      <!-- Header -->
-      <div class="mb-8">
-        <h1 class="text-3xl font-bold text-gray-800 text-center">Авторизация</h1>
-        <p class="text-blue-600 text-center mt-2">Введите почту и пароль</p>
-      </div>
+    <!-- Header -->
+    <div class="mb-8">
+      <h1 class="text-3xl font-bold text-gray-800 dark:text-white text-center">Авторизация</h1>
+      <p class="text-blue-600 dark:text-blue-400 text-center mt-2">Введите почту и пароль</p>
+    </div>
 
-      <BaseForm :submit="handleLogin" @success="onLoginSuccess">
+    <BaseForm :submit="handleLogin" @success="onLoginSuccess">
 
-        <FormInput
-            v-model="login"
-            name="email"
-            label="Логин"
-            :validation="v$"
-            placeholder="Введите почту"
-        />
+      <FormInput
+          v-model="login"
+          name="email"
+          label="Логин"
+          :validation="v$"
+          placeholder="Введите почту"
+      />
 
-        <FormPassword
-            v-model="login"
-            label="Пароль"
-            :validation="v$"
-            name="password"
-            toggleMask
-        />
+      <FormPassword
+          v-model="login"
+          label="Пароль"
+          :validation="v$"
+          name="password"
+          toggleMask
+      />
 
-        <template #actions="{ loading }">
-          <Button 
-            type="submit" 
-            label="Войти" 
+      <template #actions="{ loading }">
+        <Button
+            type="submit"
+            label="Войти"
             :loading="loading"
             class="w-full mt-6"
             size="large"
-          />
-        </template>
-      </BaseForm>
-    </div>
+        />
+      </template>
+    </BaseForm>
   </div>
 </template>

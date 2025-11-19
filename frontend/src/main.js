@@ -9,6 +9,7 @@ import Tooltip from 'primevue/tooltip'
 import {definePreset} from "@primeuix/themes";
 
 import '@/assets/styles.css'
+import 'primeicons/primeicons.css'
 
 import {
     Toast,
@@ -22,6 +23,10 @@ import './core/api/interceptors'
 import BaseForm from "@/common/components/form/BaseForm.vue";
 import FormInput from "@/common/components/form/FormInput.vue";
 import FormPassword from "@/common/components/form/FormPassword.vue";
+
+// Импортируем новые stores
+import { useThemeStore } from '@/common/stores/theme.js';
+import { useNavigationStore } from '@/common/stores/navigation.js';
 
 
 const MyCustomPreset = definePreset(Lara, {
@@ -94,8 +99,17 @@ const MyCustomPreset = definePreset(Lara, {
 
 const app = createApp(App)
 
-app.use(createPinia())
+// Создаем Pinia store
+const pinia = createPinia()
+app.use(pinia)
 app.use(router)
+
+// Инициализируем stores после создания pinia
+const themeStore = useThemeStore()
+const navigationStore = useNavigationStore()
+
+// Инициализируем тему при запуске приложения
+themeStore.initializeTheme()
 
 app.use(PrimeVue, {
     theme: {
