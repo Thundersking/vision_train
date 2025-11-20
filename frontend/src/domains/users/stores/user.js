@@ -85,7 +85,7 @@ export const useUserStore = defineStore('user', {
 
             try {
                 const response = await userService.show(id);
-                return response.data;
+                return response.data.data;
             } catch (error) {
                 this.error = error.response?.data?.message || `Ошибка при загрузке пользователя`;
                 throw error;

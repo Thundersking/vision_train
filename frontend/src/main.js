@@ -14,7 +14,7 @@ import 'primeicons/primeicons.css'
 import {
     Toast,
     InputText,
-    Password, Button, DataTable, Column, ColumnGroup, Row,
+    Password, Button, DataTable, Column, ColumnGroup, Row, Tag,
 } from 'primevue';
 
 import App from './App.vue'
@@ -30,6 +30,7 @@ import { useNavigationStore } from '@/common/stores/navigation.js';
 import TitleBlock from "@/common/components/ui/TitleBlock.vue";
 import Card from "@/common/components/ui/Card.vue";
 import BaseDataTable from "@/common/components/table/BaseDataTable.vue";
+import FieldDisplay from "@/common/components/ui/FieldDisplay.vue";
 
 
 const MyCustomPreset = definePreset(Lara, {
@@ -155,6 +156,7 @@ app.use(ConfirmationService)
 app.component('TitleBlock', TitleBlock);
 app.component('BaseForm', BaseForm);
 app.component('Card', Card);
+app.component('FieldDisplay', FieldDisplay);
 app.component('BaseDataTable', BaseDataTable);
 app.component('FormInput', FormInput);
 app.component('FormPassword', FormPassword);
@@ -162,6 +164,7 @@ app.component('Button', Button);
 app.component('Password', Password);
 app.component('InputText', InputText);
 app.component('DataTable', DataTable);
+app.component('Tag', Tag);
 app.component('Column', Column);
 app.component('ColumnGroup', ColumnGroup);
 app.component('Row', Row);
