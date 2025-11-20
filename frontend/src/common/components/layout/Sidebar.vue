@@ -1,20 +1,15 @@
 <template>
   <aside
     :class="sidebarClasses"
-    class="sidebar fixed left-0 top-0 z-9999 flex h-screen w-[290px] flex-col overflow-y-hidden border-r border-gray-200 bg-white px-5 dark:border-gray-800 dark:bg-gray-900 lg:static lg:translate-x-0"
+    class="sidebar fixed left-0 top-0 z-9999 flex h-screen w-[290px] flex-col overflow-y-hidden border-r border-gray-200 bg-white px-5 dark:!border-gray-800 dark:!bg-gray-900 lg:static lg:translate-x-0"
   >
     <!-- SIDEBAR HEADER -->
     <div
       class="flex items-center justify-between gap-2 pt-8 sidebar-header pb-7"
     >
       <router-link to="/dashboard" class="flex items-center">
-        <span class="logo">
-          <img class="dark:hidden" src="/src/assets/images/logo/logo.svg" alt="Logo" />
-          <img
-            class="hidden dark:block"
-            src="/src/assets/images/logo/logo-dark.svg"
-            alt="Logo"
-          />
+        <span class="logo text-xl font-bold text-gray-900 dark:text-white">
+          Тренажер зрения
         </span>
       </router-link>
     </div>
@@ -26,7 +21,7 @@
         <!-- Menu Groups -->
         <template v-for="group in navigationStore.menuByGroups" :key="group.title">
           <div class="mb-6">
-            <h3 class="mb-4 text-xs uppercase leading-[20px] text-gray-400">
+            <h3 class="mb-4 text-xs uppercase leading-[20px] text-gray-400 dark:text-gray-500">
               <span class="menu-group-title">
                 {{ group.title }}
               </span>

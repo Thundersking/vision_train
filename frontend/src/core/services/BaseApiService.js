@@ -13,7 +13,7 @@ export class BaseApiService {
      * @param {Object} params - Параметры запроса (фильтрация, пагинация)
      * @returns {Promise}
      */
-    getAll(params = {}) {
+    index(params = {}) {
         return apiClient.get(`/${this.resource}`, { params });
     }
 
@@ -22,7 +22,7 @@ export class BaseApiService {
      * @param {String} id - Идентификатор записи
      * @returns {Promise}
      */
-    getOne(id) {
+    show(id) {
         return apiClient.get(`/${this.resource}/${id}`);
     }
 

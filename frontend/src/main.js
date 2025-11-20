@@ -14,7 +14,7 @@ import 'primeicons/primeicons.css'
 import {
     Toast,
     InputText,
-    Password, Button,
+    Password, Button, DataTable, Column, ColumnGroup, Row,
 } from 'primevue';
 
 import App from './App.vue'
@@ -27,6 +27,7 @@ import FormPassword from "@/common/components/form/FormPassword.vue";
 // Импортируем новые stores
 import { useThemeStore } from '@/common/stores/theme.js';
 import { useNavigationStore } from '@/common/stores/navigation.js';
+import TitleBlock from "@/common/components/ui/TitleBlock.vue";
 
 
 const MyCustomPreset = definePreset(Lara, {
@@ -149,11 +150,16 @@ app.directive('tooltip', Tooltip)
 app.use(ToastService)
 app.use(ConfirmationService)
 
+app.component('TitleBlock', TitleBlock);
 app.component('BaseForm', BaseForm);
 app.component('FormInput', FormInput);
 app.component('FormPassword', FormPassword);
 app.component('Button', Button);
 app.component('Password', Password);
 app.component('InputText', InputText);
+app.component('DataTable', DataTable);
+app.component('Column', Column);
+app.component('ColumnGroup', ColumnGroup);
+app.component('Row', Row);
 app.component('Toast', Toast);
 app.mount('#app')
