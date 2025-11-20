@@ -5,11 +5,10 @@
   >
     <!-- SIDEBAR HEADER -->
     <div
-      :class="isCollapsed ? 'justify-center' : 'justify-between'"
-      class="flex items-center gap-2 pt-8 sidebar-header pb-7"
+      class="flex items-center justify-between gap-2 pt-8 sidebar-header pb-7"
     >
       <router-link to="/dashboard" class="flex items-center">
-        <span class="logo" :class="isCollapsed ? 'hidden' : ''">
+        <span class="logo">
           <img class="dark:hidden" src="/src/assets/images/logo/logo.svg" alt="Logo" />
           <img
             class="hidden dark:block"
@@ -17,13 +16,6 @@
             alt="Logo"
           />
         </span>
-
-        <img
-          class="logo-icon"
-          :class="isCollapsed ? 'lg:block' : 'hidden'"
-          src="/src/assets/images/logo/logo-icon.svg"
-          alt="Logo"
-        />
       </router-link>
     </div>
     <!-- SIDEBAR HEADER -->
@@ -35,17 +27,9 @@
         <template v-for="group in navigationStore.menuByGroups" :key="group.title">
           <div class="mb-6">
             <h3 class="mb-4 text-xs uppercase leading-[20px] text-gray-400">
-              <span
-                class="menu-group-title"
-                :class="isCollapsed ? 'lg:hidden' : ''"
-              >
+              <span class="menu-group-title">
                 {{ group.title }}
               </span>
-
-              <div
-                :class="isCollapsed ? 'lg:block hidden' : 'hidden'"
-                class="w-6 h-0.5 bg-gray-300 dark:bg-gray-600 mx-auto menu-group-icon"
-              ></div>
             </h3>
 
             <ul class="flex flex-col gap-4">
@@ -67,10 +51,7 @@
                     ]"
                   ></i>
 
-                  <span
-                    class="menu-item-text"
-                    :class="isCollapsed ? 'lg:hidden' : ''"
-                  >
+                  <span class="menu-item-text">
                     {{ item.title }}
                   </span>
                 </a>
@@ -92,18 +73,14 @@
                       ]"
                     ></i>
 
-                    <span
-                      class="menu-item-text"
-                      :class="isCollapsed ? 'lg:hidden' : ''"
-                    >
+                    <span class="menu-item-text">
                       {{ item.title }}
                     </span>
 
                     <i
                       :class="[
                         'pi pi-chevron-down menu-item-arrow text-current',
-                        selectedSubmenu === item.id ? 'menu-item-arrow-active' : 'menu-item-arrow-inactive',
-                        isCollapsed ? 'lg:hidden' : ''
+                        selectedSubmenu === item.id ? 'menu-item-arrow-active' : 'menu-item-arrow-inactive'
                       ]"
                     ></i>
                   </a>
@@ -114,7 +91,6 @@
                     :class="selectedSubmenu === item.id ? 'block' : 'hidden'"
                   >
                     <ul
-                      :class="isCollapsed ? 'lg:hidden' : 'flex'"
                       class="flex flex-col gap-1 mt-2 menu-dropdown pl-9"
                     >
                       <li v-for="child in item.children" :key="child.id">

@@ -25,15 +25,17 @@ export function useSidebar() {
     scrollTop.value = value
   }
 
-  // Проверяем, свернут ли sidebar на больших экранах
-  const isCollapsed = computed(() => sidebarToggle.value)
+  // Проверяем, свернут ли sidebar (только на mobile/tablet)
+  const isCollapsed = computed(() => false) // на desktop всегда полный
 
   // CSS классы для sidebar
   const sidebarClasses = computed(() => ({
+    // На mobile/tablet: показываем/скрываем сайдбар
     'translate-x-0': sidebarToggle.value,
     '-translate-x-full': !sidebarToggle.value,
-    'lg:w-[90px]': sidebarToggle.value, // свернутое состояние на больших экранах
+    // На desktop: всегда полная ширина и видимый
     'lg:translate-x-0': true, // всегда видим на больших экранах
+    'lg:w-[290px]': true, // всегда полная ширина на desktop
   }))
 
   // Обработка скролла для sticky header
@@ -63,10 +65,10 @@ export function useSidebar() {
     // Обработка изменения размера окна
     const handleResize = () => {
       if (window.innerWidth >= 1024) {
-        // На больших экранах sidebar должен быть всегда видимым
-        // но может быть свернутым
+        // На desktop sidebar всегда видим и не управляется toggle
+        closeSidebar() // сбрасываем состояние для mobile логики
       } else {
-        // На мобильных устройствах закрываем sidebar
+        // На мобильных/планшетных устройствах закрываем sidebar
         closeSidebar()
       }
     }
