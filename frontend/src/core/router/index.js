@@ -42,11 +42,22 @@ const routes = [
     },
     {
         path: '/users',
+        name: 'users',
         component: () => import('@/domains/users/views/Index.vue'),
         meta: {
             layout: 'dashboard',
             // requiresAuth: true,
             title: 'Пользователи'
+        }
+    },
+    {
+        path: '/users/:uuid',
+        name: 'user-show',
+        component: () => import('@/domains/users/views/Show.vue'),
+        meta: {
+            layout: 'dashboard',
+            // requiresAuth: true,
+            title: 'Просмотр пользователя'
         }
     },
     {

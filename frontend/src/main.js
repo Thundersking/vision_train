@@ -28,6 +28,8 @@ import FormPassword from "@/common/components/form/FormPassword.vue";
 import { useThemeStore } from '@/common/stores/theme.js';
 import { useNavigationStore } from '@/common/stores/navigation.js';
 import TitleBlock from "@/common/components/ui/TitleBlock.vue";
+import Card from "@/common/components/ui/Card.vue";
+import BaseDataTable from "@/common/components/table/BaseDataTable.vue";
 
 
 const MyCustomPreset = definePreset(Lara, {
@@ -152,6 +154,8 @@ app.use(ConfirmationService)
 
 app.component('TitleBlock', TitleBlock);
 app.component('BaseForm', BaseForm);
+app.component('Card', Card);
+app.component('BaseDataTable', BaseDataTable);
 app.component('FormInput', FormInput);
 app.component('FormPassword', FormPassword);
 app.component('Button', Button);

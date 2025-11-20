@@ -1,10 +1,9 @@
 <script setup>
 import {ref} from 'vue'
-import TitleBlock from '@/common/components/ui/TitleBlock.vue'
-import BaseDataTable from '@/common/components/table/BaseDataTable.vue'
-import Button from 'primevue/button'
+import {useRouter} from 'vue-router'
 import {useUserStore} from '@/domains/users/stores/user.js'
 
+const router = useRouter()
 const store = useUserStore()
 
 const columns = ref([
@@ -14,6 +13,12 @@ const columns = ref([
 ])
 
 const actions = ref([
+  {
+    label: 'Просмотр',
+    icon: 'pi pi-eye',
+    severity: 'info',
+    callback: (row) => router.push({name: 'user-show', params: {uuid: row.uuid}})
+  },
   {
     label: 'Редактировать',
     icon: 'pi pi-pencil',
@@ -30,17 +35,18 @@ const actions = ref([
 </script>
 
 <template>
-  <div class="space-y-6">
+  <div>
     <TitleBlock title="Пользователи">
       <template #actions>
         <Button
             label="Добавить пользователя"
             icon="pi pi-plus"
-            class="bg-sky-500 hover:bg-sky-600"
         />
       </template>
     </TitleBlock>
 
-    <BaseDataTable :store="store" :columns="columns" :actions="actions"/>
+    <Card>
+      <BaseDataTable :store="store" :columns="columns" :actions="actions"/>
+    </Card>
   </div>
 </template>
