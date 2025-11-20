@@ -14,6 +14,16 @@ const routes = [
         }
     },
     {
+        path: '/forbidden',
+        name: 'forbidden',
+        component: () => import('@/domains/auth/views/Forbidden.vue'),
+        meta: {
+            layout: 'dashboard',
+            // requiresAuth: true,
+            title: '403 - Доступ запрещен'
+        }
+    },
+    {
         path: '/dashboard',
         component: () => import('@/domains/dashboard/views/Overview.vue'),
         meta: {

@@ -1,7 +1,6 @@
 import apiClient from './client'
-import {useAuthStore} from '../../domains/auth/stores/auth.js'
 import router from '../router'
-import {useToast} from 'primevue/usetoast';
+import {useAuthStore} from "@/domains/auth/stores/auth.js";
 
 export const setupInterceptors = () => {
     /**
@@ -41,7 +40,6 @@ export const setupInterceptors = () => {
             }
 
             const authStore = useAuthStore()
-            const toast = useToast()
 
             if (error.response?.status === 401 && !originalRequest._retry) {
                 originalRequest._retry = true
@@ -56,36 +54,19 @@ export const setupInterceptors = () => {
                     originalRequest.headers.Authorization = `Bearer ${access_token}`
                     return apiClient(originalRequest)
                 } catch (refreshError) {
-                    console.error('Ошибка при обновлении токена:', refreshError)
                     // Если не удалось обновить токен, выходим из аккаунта
                     await authStore.logout()
                     await router.push({name: 'login'})
-                    toast.error('Сессия истекла. Пожалуйста, войдите снова.')
                     return Promise.reject(refreshError)
                 }
             }
 
-            if (error.response?.status === 422) {
-                toast.error('Ошибка валидации')
-                return Promise.reject(error);
+            if (error.response?.status === 403) {
+                await router.push({'name': 'forbidden'});
             }
 
-            // Обработка других ошибок API
-            if (error.response) {
-                let errorMessage = 'Произошла ошибка при обработке запроса'
-
-                if (error.response.data && error.response.data.message) {
-                    errorMessage = error.response.data.message
-                } else if (error.response.data && error.response.data.errors) {
-                    const errors = error.response.data.errors
-                    errorMessage = Object.values(errors)[0][0] || errorMessage
-                }
-
-                toast.error(errorMessage)
-            } else if (error.request) {
-                toast.error('Сервер не отвечает. Проверьте подключение к интернету.')
-            } else {
-                toast.error('Ошибка при отправке запроса.')
+            if (error.response?.status === 422) {
+                return Promise.reject(error);
             }
 
             return Promise.reject(error)

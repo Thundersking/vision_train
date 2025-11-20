@@ -1,6 +1,6 @@
 import {defineStore} from 'pinia';
 import {userService} from "@/domains/users/services/UserService.js";
-import {useToast} from "primevue/usetoast";
+import {useNotification} from "@/common/composables/useNotification.js";
 
 export const useUserStore = defineStore('user', {
     state: () => ({
@@ -54,8 +54,8 @@ export const useUserStore = defineStore('user', {
             try {
                 const response = await userService.update(id, data);
 
-                const toast = useToast();
-                toast.add({severity: 'success', summary: 'Успех', detail: 'Пользователь успешно обновлен', life: 3000});
+                const { success: showSuccess } = useNotification();
+                showSuccess('Пользователь успешно обновлен');
                 return response.data;
             } catch (error) {
                 this.error = error.response?.data?.message || `Ошибка при обновлении пользователя`;

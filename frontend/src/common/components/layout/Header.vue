@@ -1,6 +1,6 @@
 <template>
   <header
-    class="sticky top-0 z-99999 flex w-full border-gray-200 bg-white lg:border-b dark:border-gray-800 dark:bg-gray-900"
+    class="sticky top-0 z-50 flex w-full border-gray-200 bg-white lg:border-b dark:border-gray-800 dark:bg-gray-900"
   >
     <div class="flex grow flex-col items-center justify-between lg:flex-row lg:px-6">
       <div
@@ -9,7 +9,7 @@
         <!-- Hamburger Toggle BTN -->
         <button
           :class="themeStore.sidebarToggle ? 'bg-gray-100 dark:bg-gray-800' : ''"
-          class="z-99999 flex h-10 w-10 items-center justify-center rounded-lg border-gray-200 text-gray-500 lg:hidden dark:border-gray-800 dark:text-gray-400"
+          class="z-50 flex h-10 w-10 items-center justify-center rounded-lg border-gray-200 text-gray-500 lg:hidden dark:border-gray-800 dark:text-gray-400"
           @click="themeStore.toggleSidebar"
         >
           <!-- Единая иконка для всех экранов -->
@@ -25,17 +25,12 @@
         <!-- Hamburger Toggle BTN -->
 
         <router-link to="/dashboard" class="lg:hidden">
-          <img class="dark:hidden" src="/src/assets/images/logo/logo.svg" alt="Logo" />
-          <img
-            class="hidden dark:block"
-            src="/src/assets/images/logo/logo-dark.svg"
-            alt="Logo"
-          />
+          Тренажер зрения
         </router-link>
 
         <!-- Application nav menu button -->
         <button
-          class="z-99999 flex h-10 w-10 items-center justify-center rounded-lg text-gray-700 hover:bg-gray-100 lg:hidden dark:text-gray-400 dark:hover:bg-gray-800"
+          class="z-50 flex h-10 w-10 items-center justify-center rounded-lg text-gray-700 hover:bg-gray-100 lg:hidden dark:text-gray-400 dark:hover:bg-gray-800"
           :class="menuToggle ? 'bg-gray-100 dark:bg-gray-800' : ''"
           @click="toggleMenu"
         >
