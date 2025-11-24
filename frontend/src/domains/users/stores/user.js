@@ -1,7 +1,8 @@
 import {defineStore} from 'pinia';
 import {userService} from "@/domains/users/services/UserService.js";
-import {useNotification} from "@/common/composables/useNotification.js";
+import {useToast} from 'vue-toastification';
 
+const toast = useToast();
 export const useUserStore = defineStore('user', {
     state: () => ({
         loading: false,
@@ -54,8 +55,8 @@ export const useUserStore = defineStore('user', {
             try {
                 const response = await userService.update(id, data);
 
-                const { success: showSuccess } = useNotification();
-                showSuccess('Пользователь успешно обновлен');
+                toast.success('Пользователь успешно обновлен');
+                
                 return response.data;
             } catch (error) {
                 this.error = error.response?.data?.message || `Ошибка при обновлении пользователя`;

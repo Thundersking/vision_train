@@ -1,19 +1,19 @@
 <template>
   <div>
-    <label v-if="label" :for="computedId" class="block text-sm font-medium mb-1 text-surface-900 dark:text-surface-0">{{ label }}</label>
-    <Password
-        :id="computedId"
-        :value="modelValue?.[name]"
-        @update:modelValue="updateField"
-        :feedback="feedback"
-        :toggleMask="toggleMask"
-        :placeholder="placeholder"
-        :disabled="disabled"
-        :invalid="hasError"
-        class="w-full"
-        inputClass="w-full"
-        v-bind="$attrs"
-    />
+    <label v-if="label" :for="computedId" class="block text-sm font-medium mb-1 text-surface-900 dark:text-surface-0">
+      {{ label }}
+      <span v-if="required" class="text-red-500 ml-1">*</span>
+    </label>
+    <div class="flex items-center gap-2">
+      <ToggleSwitch
+          :id="computedId"
+          :modelValue="modelValue?.[name]"
+          @update:modelValue="updateField"
+          :disabled="disabled"
+          :class="{'p-invalid': hasError}"
+          v-bind="$attrs"
+      />
+    </div>
     <small class="text-red-500" v-if="hasError">
       {{ errorMessage }}
     </small>
@@ -34,44 +34,39 @@ const props = defineProps({
   },
   name: {
     type: String,
-    required: true
+    required: true,
   },
   label: {
     type: String,
     default: ''
   },
-  placeholder: {
-    type: String,
-    default: ''
+  required: {
+    type: Boolean,
+    default: false
   },
   disabled: {
-    type: Boolean,
-    default: false
-  },
-  toggleMask: {
-    type: Boolean,
-    default: false
-  },
-  feedback: {
     type: Boolean,
     default: false
   },
   validation: {
     type: Object,
     default: () => null
-  }
+  },
 })
 
 const emit = defineEmits(['update:modelValue'])
 
 const computedId = computed(() => {
-  return props.id || `form-password-${props.name}`;
+  return props.id || `form-switch-${props.name}`;
 })
 
 const hasError = computed(() => {
   const v = props.validation;
   const key = props.name;
-  return !!(v && key && v[key]?.$error);
+  if (v && key && v[key]) {
+    return v[key].$error;
+  }
+  return false;
 })
 
 const errorMessage = computed(() => {

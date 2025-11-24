@@ -22,9 +22,9 @@ defineProps({
 
 <template>
   <div>
-    <label class="block text-sm font-medium text-gray-700 mb-1">{{ label }}</label>
+    <label class="block text-sm font-semibold text-gray-700 mb-1">{{ label }}</label>
     
-    <p v-if="type === 'text'" class="text-gray-900 font-medium">
+    <p v-if="type === 'text'" class="text-gray-900">
       {{ value || '-' }}
     </p>
     

@@ -32,6 +32,7 @@ onMounted(async () => {
         <Button
             label="Редактировать"
             icon="pi pi-pencil"
+            @click="$router.push({name: 'user-update', params: {uuid: route.params.uuid}})"
         />
       </template>
     </TitleBlock>

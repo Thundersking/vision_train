@@ -71,6 +71,16 @@ const routes = [
         }
     },
     {
+        path: '/users/:uuid/update',
+        name: 'user-update',
+        component: () => import('@/domains/users/views/Update.vue'),
+        meta: {
+            layout: 'dashboard',
+            // requiresAuth: true,
+            title: 'Редактирование пользователя'
+        }
+    },
+    {
         path: '/reports',
         component: () => import('@/domains/reports/views/Index.vue'),
         meta: {

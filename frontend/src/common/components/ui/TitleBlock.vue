@@ -2,7 +2,7 @@
   <div class="flex justify-between items-center mb-4">
     <div class="flex items-center gap-1">
       <div 
-        v-if="backTo"
+        v-if="showBackButton"
         class="cursor-pointer p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors"
         @click="handleBack"
       >
@@ -36,15 +36,29 @@ export default {
       default: null
     },
     backTo: {
-      type: [String, Object],
+      type: [String, Object, Boolean],
       default: null
+    }
+  },
+  computed: {
+    showBackButton() {
+      return this.backTo !== null && this.backTo !== false
     }
   },
   methods: {
     handleBack() {
-      if (this.backTo) {
-        this.$router.push(this.backTo)
+      if (!this.showBackButton) {
+        return
       }
+
+      const isHistoryBack = this.backTo === true || this.backTo === 'history'
+
+      if (isHistoryBack) {
+        this.$router.back()
+        return
+      }
+
+      this.$router.push(this.backTo)
     }
   }
 }

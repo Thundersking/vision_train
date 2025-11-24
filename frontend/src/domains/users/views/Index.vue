@@ -23,7 +23,7 @@ const actions = ref([
     label: 'Редактировать',
     icon: 'pi pi-pencil',
     severity: 'info',
-    callback: (row) => console.log('Edit:', row)
+    callback: (row) => router.push({name: 'user-update', params: {uuid: row.uuid}})
   },
   {
     label: 'Удалить',

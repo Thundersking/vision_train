@@ -20,90 +20,80 @@
   </div>
 </template>
 
-<script>
-export default {
-  name: 'FormInput',
+<script setup>
+import {computed} from 'vue'
 
-  props: {
-    id: {
-      type: String,
-      default: null
-    },
-    modelValue: {
-      type: Object,
-      required: true
-    },
-    name: {
-      type: String,
-      required: true,
-    },
-    label: {
-      type: String,
-      default: ''
-    },
-    type: {
-      type: String,
-      default: 'text'
-    },
-    /**
-     * Является ли поле обязательным
-     */
-    required: {
-      type: Boolean,
-      default: false
-    },
-    placeholder: {
-      type: String,
-      default: ''
-    },
-    disabled: {
-      type: Boolean,
-      default: false
-    },
-    validation: {
-      type: Object,
-      default: () => null
-    },
+const props = defineProps({
+  id: {
+    type: String,
+    default: null
   },
-
-  emits: ['update:modelValue'],
-
-  computed: {
-    computedId() {
-      return this.id || `form-input-${this.name}`;
-    },
-
-    hasError() {
-      const v = this.validation;
-      const key = this.name;
-      if (v && key && v[key]) {
-        return v[key].$error;
-      }
-      return false;
-    },
-
-    errorMessage() {
-      const v = this.validation;
-      const key = this.name;
-      if (v && key && this.hasError) {
-        return v[key].$errors?.[0]?.$message || '';
-      }
-      return '';
-    }
+  modelValue: {
+    type: Object,
+    required: true
   },
+  name: {
+    type: String,
+    required: true,
+  },
+  label: {
+    type: String,
+    default: ''
+  },
+  type: {
+    type: String,
+    default: 'text'
+  },
+  required: {
+    type: Boolean,
+    default: false
+  },
+  placeholder: {
+    type: String,
+    default: ''
+  },
+  disabled: {
+    type: Boolean,
+    default: false
+  },
+  validation: {
+    type: Object,
+    default: () => null
+  },
+})
 
-  methods: {
-    updateField(value) {
-      this.modelValue[this.name] = value;
+const emit = defineEmits(['update:modelValue'])
 
-      this.touchField();
-    },
+const computedId = computed(() => {
+  return props.id || `form-input-${props.name}`;
+})
 
-    touchField() {
-      const v = this.validation;
-      const key = this.name;
-      v?.[key]?.$touch?.();
-    }
+const hasError = computed(() => {
+  const v = props.validation;
+  const key = props.name;
+  if (v && key && v[key]) {
+    return v[key].$error;
   }
-};
+  return false;
+})
+
+const errorMessage = computed(() => {
+  const v = props.validation;
+  const key = props.name;
+  if (v && key && hasError.value) {
+    return v[key].$errors?.[0]?.$message || '';
+  }
+  return '';
+})
+
+const updateField = (value) => {
+  props.modelValue[props.name] = value;
+  touchField();
+}
+
+const touchField = () => {
+  const v = props.validation;
+  const key = props.name;
+  v?.[key]?.$touch?.();
+}
 </script>

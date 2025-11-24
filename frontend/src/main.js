@@ -8,13 +8,15 @@ import ConfirmationService from 'primevue/confirmationservice';
 import Tooltip from 'primevue/tooltip'
 import {definePreset} from "@primeuix/themes";
 
+import Toast, { POSITION } from 'vue-toastification'
+import 'vue-toastification/dist/index.css';
+
 import '@/assets/styles.css'
 import 'primeicons/primeicons.css'
 
 import {
-    Toast,
     InputText,
-    Password, Button, DataTable, Column, ColumnGroup, Row, Tag,
+    Password, Button, DataTable, Column, ColumnGroup, Row, Tag, ToggleSwitch,
 } from 'primevue';
 
 import App from './App.vue'
@@ -31,6 +33,7 @@ import TitleBlock from "@/common/components/ui/TitleBlock.vue";
 import Card from "@/common/components/ui/Card.vue";
 import BaseDataTable from "@/common/components/table/BaseDataTable.vue";
 import FieldDisplay from "@/common/components/ui/FieldDisplay.vue";
+import FormSwitch from "@/common/components/form/FormSwitch.vue";
 
 
 const MyCustomPreset = definePreset(Lara, {
@@ -150,10 +153,14 @@ app.use(PrimeVue, {
 });
 
 app.directive('tooltip', Tooltip)
-app.use(ToastService)
+app.use(Toast, {
+    position: POSITION.TOP_CENTER,
+    timeout: 3000
+})
 app.use(ConfirmationService)
 
 app.component('TitleBlock', TitleBlock);
+app.component('FormSwitch', FormSwitch);
 app.component('BaseForm', BaseForm);
 app.component('Card', Card);
 app.component('FieldDisplay', FieldDisplay);
@@ -162,11 +169,11 @@ app.component('FormInput', FormInput);
 app.component('FormPassword', FormPassword);
 app.component('Button', Button);
 app.component('Password', Password);
+app.component('ToggleSwitch', ToggleSwitch);
 app.component('InputText', InputText);
 app.component('DataTable', DataTable);
 app.component('Tag', Tag);
 app.component('Column', Column);
 app.component('ColumnGroup', ColumnGroup);
 app.component('Row', Row);
-app.component('Toast', Toast);
 app.mount('#app')
