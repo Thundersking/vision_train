@@ -41,6 +41,7 @@ const actions = ref([
         <Button
             label="Добавить пользователя"
             icon="pi pi-plus"
+            @click="router.push({name: 'user-create'})"
         />
       </template>
     </TitleBlock>

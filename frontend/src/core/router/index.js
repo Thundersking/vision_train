@@ -61,6 +61,16 @@ const routes = [
         }
     },
     {
+        path: '/users/create',
+        name: 'user-create',
+        component: () => import('@/domains/users/views/Create.vue'),
+        meta: {
+            layout: 'dashboard',
+            // requiresAuth: true,
+            title: 'Создание пользователя'
+        }
+    },
+    {
         path: '/users/:uuid',
         name: 'user-show',
         component: () => import('@/domains/users/views/Show.vue'),
