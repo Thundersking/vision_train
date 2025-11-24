@@ -22,6 +22,7 @@
 
 <script setup>
 import {computed} from 'vue'
+import {useFormFieldErrors} from "@/common/composables/useFormFieldErrors.js";
 
 const props = defineProps({
   id: {
@@ -60,26 +61,16 @@ const computedId = computed(() => {
   return props.id || `form-switch-${props.name}`;
 })
 
-const hasError = computed(() => {
-  const v = props.validation;
-  const key = props.name;
-  if (v && key && v[key]) {
-    return v[key].$error;
-  }
-  return false;
-})
-
-const errorMessage = computed(() => {
-  const v = props.validation;
-  const key = props.name;
-  if (v && key && hasError.value) {
-    return v[key].$errors?.[0]?.$message || '';
-  }
-  return '';
-})
+const { hasError, errorMessage, clearBackendError } = useFormFieldErrors(
+    props.name,
+    props.validation
+);
 
 const updateField = (value) => {
   props.modelValue[props.name] = value;
+
+  clearBackendError();
+
   touchField();
 }
 

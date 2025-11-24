@@ -27,9 +27,9 @@ export class User extends BaseModel {
 
     static validationRules() {
         return {
-            // first_name: {
-            //     required: helpers.withMessage('Имя обязательно для заполнения', required)
-            // },
+            first_name: {
+                required: helpers.withMessage('Имя обязательно для заполнения', required)
+            },
             last_name: {
                 required: helpers.withMessage('Фамилия обязательна для заполнения', required)
             },

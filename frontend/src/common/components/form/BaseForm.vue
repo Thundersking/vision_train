@@ -14,56 +14,58 @@
   </form>
 </template>
 
-<script>
-export default {
-  name: 'BaseForm',
+<script setup>
+import { ref, computed, provide } from 'vue';
 
-  props: {
-    submit: {
-      type: Function,
-      required: true
-    },
-    validator: {
-      type: Object,
-      default: null
-    }
+const props = defineProps({
+  submit: {
+    type: Function,
+    required: true
   },
+  validator: {
+    type: Object,
+    default: null
+  }
+});
 
-  emits: ['success', 'error'],
+const emit = defineEmits(['success', 'error']);
 
-  data() {
-    return {
-      backendErrors: [],
-      loading: false
-    };
-  },
+const loading = ref(false);
+const fieldErrors = ref({});
 
-  methods: {
-    async handleSubmit() {
-      this.loading = true;
-      this.backendErrors = [];
+const backendErrors = computed(() => {
+  return Object.values(fieldErrors.value).flat();
+});
 
-      try {
-        const result = await this.submit();
-        this.$emit('success', result);
-      } catch (error) {
-        console.log('error', error);
+const clearFieldError = (fieldName) => {
+  if (fieldErrors.value[fieldName]) {
+    delete fieldErrors.value[fieldName];
+  }
+};
 
-        /**
-         * Обработка ошибок с бэкенда
-         */
-        if (error.response?.data?.errors) {
-          const errors = error.response.data.errors;
-          this.backendErrors = Object.values(errors).flat();
-        } else if (error.response?.data?.message) {
-          this.backendErrors = [error.response.data.message];
-        }
+provide('baseFormErrors', {
+  fieldErrors,
+  clearFieldError
+});
 
-        this.$emit('error', error);
-      } finally {
-        this.loading = false;
-      }
+const handleSubmit = async () => {
+  loading.value = true;
+  fieldErrors.value = {};
+
+  try {
+    const result = await props.submit();
+    emit('success', result);
+  } catch (error) {
+    if (error.response?.data?.errors) {
+      fieldErrors.value = error.response.data.errors;
+    } else if (error.response?.data?.message) {
+      fieldErrors.value = { _general: [error.response.data.message] };
     }
+
+    emit('error', error);
+  } finally {
+    loading.value = false;
   }
 };
 </script>
+
