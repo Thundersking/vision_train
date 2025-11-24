@@ -3,7 +3,6 @@ import { createPinia } from 'pinia'
 import Lara from '@primeuix/themes/lara';
 import PrimeVue from 'primevue/config';
 
-import ToastService from 'primevue/toastservice'
 import ConfirmationService from 'primevue/confirmationservice';
 import Tooltip from 'primevue/tooltip'
 import {definePreset} from "@primeuix/themes";
@@ -155,7 +154,9 @@ app.use(PrimeVue, {
 app.directive('tooltip', Tooltip)
 app.use(Toast, {
     position: POSITION.TOP_CENTER,
-    timeout: 3000
+    timeout: 3000,
+    maxToasts: 3,
+    newestOnTop: true
 })
 app.use(ConfirmationService)
 

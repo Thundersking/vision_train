@@ -1,6 +1,7 @@
 <script>
 import { computed } from 'vue'
 import Toast from 'primevue/toast'
+import ConfirmDialog from 'primevue/confirmdialog'
 import DashboardLayout from '@/common/components/layout/DashboardLayout.vue'
 import AuthLayout from '@/common/components/layout/AuthLayout.vue'
 
@@ -8,6 +9,7 @@ export default {
   name: 'App',
   components: {
     Toast,
+    ConfirmDialog,
     DashboardLayout,
     AuthLayout
   },
@@ -40,8 +42,9 @@ export default {
       <router-view />
     </div>
 
-    <!-- Toast for notifications -->
+    <!-- Toast & confirm dialog for глобальных уведомлений -->
     <Toast />
+    <ConfirmDialog />
   </div>
 </template>
 

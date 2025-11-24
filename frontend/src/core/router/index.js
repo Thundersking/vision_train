@@ -28,7 +28,7 @@ const routes = [
         component: () => import('@/domains/dashboard/views/Overview.vue'),
         meta: {
             layout: 'dashboard',
-            // requiresAuth: true,
+            requiresAuth: true,
             title: 'Dashboard'
         }
     },
