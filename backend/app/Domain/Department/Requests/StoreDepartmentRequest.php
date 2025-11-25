@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace App\Domain\Department\Requests;
 
+use App\Support\Enums\Timezone;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class StoreDepartmentRequest extends FormRequest
 {
@@ -17,7 +19,11 @@ class StoreDepartmentRequest extends FormRequest
     {
         return [
             'name' => ['required', 'string', 'max:255'],
-            'utc_offset_minutes' => ['required', 'numeric'],
+            'utc_offset_minutes' => [
+                'required',
+                'numeric',
+                Rule::in(collect(Timezone::cases())->map(fn($tz) => $tz->getOffsetMinutes())->toArray())
+            ],
             'address' => ['nullable', 'string', 'max:500'],
             'phone' => ['nullable', 'string', 'max:20'],
             'email' => ['nullable', 'email', 'max:100'],

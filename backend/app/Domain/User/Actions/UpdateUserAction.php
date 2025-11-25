@@ -46,20 +46,20 @@ final class UpdateUserAction
                 $data['password'] = Hash::make($data['password']);
             }
 
-            $user->update($data);
+            $newData = $this->repository->update($user->id, $data);
 
-            if (!empty($data['roles']) && is_array($data['roles'])) {
-                $user->syncRoles($data['roles']);
+            if (!empty($newData['roles']) && is_array($newData['roles'])) {
+                $user->syncRoles($newData['roles']);
             }
 
             $this->recordAudit(
                 action: AuditActionType::UPDATED,
                 entity: $user,
                 oldData: array_diff_key($oldData, ['password' => null]),
-                newData: array_diff_key($data, ['password' => null])
+                newData: array_diff_key((array)$newData, ['password' => null])
             );
 
-            return $user->refresh();
+            return $newData;
         });
     }
 }

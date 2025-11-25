@@ -24,6 +24,7 @@ import './core/api/interceptors'
 import BaseForm from "@/common/components/form/BaseForm.vue";
 import FormInput from "@/common/components/form/FormInput.vue";
 import FormPassword from "@/common/components/form/FormPassword.vue";
+import FormSelect from "@/common/components/form/FormSelect.vue";
 
 // Импортируем новые stores
 import { useThemeStore } from '@/common/stores/theme.js';
@@ -168,6 +169,7 @@ app.component('FieldDisplay', FieldDisplay);
 app.component('BaseDataTable', BaseDataTable);
 app.component('FormInput', FormInput);
 app.component('FormPassword', FormPassword);
+app.component('FormSelect', FormSelect);
 app.component('Button', Button);
 app.component('Password', Password);
 app.component('ToggleSwitch', ToggleSwitch);

@@ -4,19 +4,24 @@ declare(strict_types=1);
 
 namespace App\Domain\Department\Guards;
 
-use App\Domain\Department\Queries\DepartmentQueries;
+use App\Domain\Department\Repositories\DepartmentRepository;
 use Illuminate\Validation\ValidationException;
 
 final readonly class DepartmentGuard
 {
-    public function __construct(private DepartmentQueries $queries) {}
+    public function __construct(private DepartmentRepository $repository) {}
 
     /**
      * Проверка на уникальность email в организации при создании отделения.
+     * @throws ValidationException
      */
-    public function ensureEmailUnique(int $orgId, string $email): void
+    public function ensureEmailUnique(string|null $email): void
     {
-        if ($this->queries->emailExists($orgId, mb_strtolower($email))) {
+        if (empty($data['email'])) {
+            return;
+        }
+
+        if ($this->repository->emailExists(mb_strtolower($email))) {
             throw ValidationException::withMessages([
                 'email' => 'Email уже используется в организации',
             ]);
@@ -27,9 +32,13 @@ final readonly class DepartmentGuard
      * Проверка на уникальность email в организации при обновлении, исключая текущее отделение.
      * @throws ValidationException
      */
-    public function ensureEmailUniqueExceptDepartment(int $orgId, string $email, string $exceptUuid): void
+    public function ensureEmailUniqueExceptUuid(string|null $email, string $exceptUuid): void
     {
-        if ($this->queries->emailExistsExceptDepartmentUuid($orgId, $email, $exceptUuid)) {
+        if (empty($data['email'])) {
+            return;
+        }
+
+        if ($this->repository->emailExistsExceptUuid($email, $exceptUuid)) {
             throw ValidationException::withMessages([
                 'email' => 'Email уже используется в организации',
             ]);

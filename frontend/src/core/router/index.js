@@ -50,6 +50,8 @@ const routes = [
             title: 'Пациенты'
         }
     },
+
+    // Users
     {
         path: '/users',
         name: 'users',
@@ -90,6 +92,45 @@ const routes = [
             title: 'Редактирование пользователя'
         }
     },
+
+    // Departments
+    {
+        path: '/departments',
+        name: 'departments',
+        component: () => import('@/domains/departments/views/Index.vue'),
+        meta: {
+            layout: 'dashboard',
+            title: 'Офисы'
+        }
+    },
+    {
+        path: '/departments/create',
+        name: 'department-create',
+        component: () => import('@/domains/departments/views/Create.vue'),
+        meta: {
+            layout: 'dashboard',
+            title: 'Создание офиса'
+        }
+    },
+    {
+        path: '/departments/:uuid',
+        name: 'department-show',
+        component: () => import('@/domains/departments/views/Show.vue'),
+        meta: {
+            layout: 'dashboard',
+            title: 'Просмотр офиса'
+        }
+    },
+    {
+        path: '/departments/:uuid/update',
+        name: 'department-update',
+        component: () => import('@/domains/departments/views/Update.vue'),
+        meta: {
+            layout: 'dashboard',
+            title: 'Редактирование офиса'
+        }
+    },
+
     {
         path: '/reports',
         component: () => import('@/domains/reports/views/Index.vue'),

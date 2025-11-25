@@ -10,19 +10,10 @@
         <div class="space-y-4">
           <FormInput
               v-model="form"
-              name="last_name"
-              label="Фамилия"
+              name="name"
+              label="Название"
               required
-              placeholder="Введите фамилию"
-              :validation="validator"
-          />
-
-          <FormInput
-              v-model="form"
-              name="first_name"
-              label="Имя"
-              required
-              placeholder="Введите имя"
+              placeholder="Введите название офиса"
               :validation="validator"
           />
 
@@ -31,18 +22,7 @@
               name="email"
               label="Email"
               type="email"
-              required
               placeholder="Введите email"
-              :validation="validator"
-          />
-        </div>
-
-        <div class="space-y-4">
-          <FormInput
-              v-model="form"
-              name="middle_name"
-              label="Отчество"
-              placeholder="Введите отчество"
               :validation="validator"
           />
 
@@ -50,8 +30,27 @@
               v-model="form"
               name="phone"
               label="Телефон"
-              type="tel"
               placeholder="Введите телефон"
+              :validation="validator"
+          />
+        </div>
+
+        <div class="space-y-4">
+          <FormSelect
+              v-model="form"
+              name="utc_offset_minutes"
+              label="Часовой пояс"
+              :options="timezoneOptions"
+              placeholder="Выберите часовой пояс"
+              required
+              :validation="validator"
+          />
+
+          <FormInput
+              v-model="form"
+              name="address"
+              label="Адрес"
+              placeholder="Укажите адрес"
               :validation="validator"
           />
 
@@ -83,6 +82,7 @@
 
 <script setup>
 import {toRefs} from 'vue'
+import {TIMEZONE_OPTIONS} from "@/common/constants/timezones.js";
 
 const props = defineProps({
   form: {
@@ -100,12 +100,14 @@ const props = defineProps({
   loading: {
     type: Boolean,
     default: false
-  },
+  }
 })
 
 const emit = defineEmits(['success', 'error'])
 
 const {form, validator, submit, loading} = toRefs(props)
+
+const timezoneOptions = TIMEZONE_OPTIONS
 
 const onSuccess = (payload) => {
   emit('success', payload)

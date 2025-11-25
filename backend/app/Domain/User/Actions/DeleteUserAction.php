@@ -15,33 +15,26 @@ final class DeleteUserAction
 {
     use RecordsAuditLog;
 
-    public function __construct(private UserRepository $repository)
+    public function __construct(private readonly UserRepository $repository)
     {
     }
 
     /**
      * @throws \Exception
      */
-    public function execute(string $uuid): bool
+    public function execute(User $user): void
     {
-        $user = $this->repository->findByUuid($uuid);
+        DB::transaction(function () use ($user) {
+            $deleted = $this->repository->delete($user->id);
 
-        if (!$user) {
-            throw new ModelNotFoundException();
-        }
-
-        return DB::transaction(function () use ($user) {
-            $userData = $user->toArray();
-
-            $result = $user->delete();
+            if (!$deleted) {
+                throw new ModelNotFoundException();
+            }
 
             $this->recordAudit(
                 action: AuditActionType::DELETED,
                 entity: $user,
-                oldData: array_diff_key($userData, ['password' => null])
             );
-
-            return $result;
         });
     }
 }

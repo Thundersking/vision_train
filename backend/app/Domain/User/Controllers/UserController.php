@@ -6,6 +6,7 @@ use App\Domain\User\Actions\CreateUserAction;
 use App\Domain\User\Actions\DeleteUserAction;
 use App\Domain\User\Actions\ToggleUserStatusAction;
 use App\Domain\User\Actions\UpdateUserAction;
+use App\Domain\User\Models\User;
 use App\Domain\User\Repositories\UserRepository;
 use App\Domain\User\Requests\UserCreateRequest;
 use App\Domain\User\Requests\UserSearchRequest;
@@ -13,6 +14,7 @@ use App\Domain\User\Requests\UserUpdateRequest;
 use App\Domain\User\Resources\UserDetailResource;
 use App\Domain\User\Resources\UserListResource;
 use Illuminate\Auth\Access\AuthorizationException;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
@@ -98,15 +100,17 @@ final class UserController extends Controller
      */
     public function destroy(string $uuid, DeleteUserAction $action): JsonResponse
     {
+        /** @var User $user */
         $user = $this->repository->findByUuid($uuid);
+
+        if (!$user) {
+            throw new ModelNotFoundException();
+        }
 
 //        $this->authorize('delete', $user);
 
-        $action->execute($uuid);
+        $action->execute($user);
 
-        return response()->json([
-            'message' => 'Пользователь успешно удален',
-            'code' => 200
-        ]);
+        return new JsonResponse('Запись успешно удалена.');
     }
 }

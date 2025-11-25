@@ -1,9 +1,10 @@
 import {defineStore} from 'pinia';
-import {userService} from "@/domains/users/services/UserService.js";
+import {departmentService} from "@/domains/departments/services/DepartmentService.js";
 import {useToast} from 'vue-toastification';
 
 const toast = useToast();
-export const useUserStore = defineStore('user', {
+
+export const useDepartmentsStore = defineStore('department', {
     state: () => ({
         loading: false,
         error: null,
@@ -12,7 +13,7 @@ export const useUserStore = defineStore('user', {
 
     getters: {
         resource() {
-            return userService.resource;
+            return departmentService.resource;
         },
     },
 
@@ -22,77 +23,75 @@ export const useUserStore = defineStore('user', {
             this.error = null;
 
             try {
-                const response = await userService.index(params);
+                const response = await departmentService.index(params);
                 this.data = response.data;
                 return response.data;
             } catch (error) {
-                this.error = error.response?.data?.message || 'Ошибка при загрузке пользователей';
+                this.error = error.response?.data?.message || 'Ошибка при загрузке офисов';
                 throw error;
             } finally {
                 this.loading = false;
             }
         },
 
-        async create(data) {
+        async create(payload) {
             this.loading = true;
             this.error = null;
 
             try {
-                const response = await userService.create(data);
+                const response = await departmentService.create(payload);
                 return response.data;
             } catch (error) {
-                this.error = error.response?.data?.message || 'Ошибка при создании пользователя';
+                this.error = error.response?.data?.message || 'Ошибка при создании офиса';
                 throw error;
             } finally {
                 this.loading = false;
             }
         },
 
-        async update(id, data) {
+        async update(uuid, payload) {
             this.loading = true;
             this.error = null;
 
             try {
-                const response = await userService.update(id, data);
-
-                toast.success('Пользователь успешно обновлен');
-
+                const response = await departmentService.update(uuid, payload);
+                toast.success('Офис успешно обновлен');
                 return response.data;
             } catch (error) {
-                this.error = error.response?.data?.message || `Ошибка при обновлении пользователя`;
+                this.error = error.response?.data?.message || 'Ошибка при обновлении офиса';
                 throw error;
             } finally {
                 this.loading = false;
             }
         },
 
-        async delete(id) {
+        async delete(uuid) {
             this.loading = true;
             this.error = null;
 
             try {
-                return await userService.delete(id);
+                return await departmentService.delete(uuid);
             } catch (error) {
-                this.error = error.response?.data?.message || `Ошибка при удалении пользователя`;
+                this.error = error.response?.data?.message || 'Ошибка при удалении офиса';
                 throw error;
             } finally {
                 this.loading = false;
             }
         },
 
-        async show(id) {
+        async show(uuid) {
             this.loading = true;
             this.error = null;
 
             try {
-                const response = await userService.show(id);
+                const response = await departmentService.show(uuid);
                 return response.data.data;
             } catch (error) {
-                this.error = error.response?.data?.message || `Ошибка при загрузке пользователя`;
+                this.error = error.response?.data?.message || 'Ошибка при загрузке офиса';
                 throw error;
             } finally {
                 this.loading = false;
             }
-        },
+        }
     }
 });
