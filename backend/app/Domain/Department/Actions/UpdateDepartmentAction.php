@@ -39,7 +39,8 @@ final class UpdateDepartmentAction
         return DB::transaction(function () use ($department, $data) {
             $oldData = $department->toArray();
 
-            $newData = $this->repository->update($department->id, $data);
+            $updatedDepartment = $this->repository->update($department->id, $data);
+            $newData = $updatedDepartment?->toArray();
 
             $this->recordAudit(
                 action: AuditActionType::UPDATED,
@@ -48,7 +49,7 @@ final class UpdateDepartmentAction
                 newData: $newData
             );
 
-            return $newData;
+            return $updatedDepartment;
         });
     }
 }
