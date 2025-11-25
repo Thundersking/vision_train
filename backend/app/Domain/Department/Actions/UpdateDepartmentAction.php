@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Domain\Department\Actions;
 
 use App\Domain\Department\Guards\DepartmentGuard;
+use App\Domain\Department\Models\Department;
 use App\Domain\Department\Repositories\DepartmentRepository;
 use App\Domain\Shared\Enums\AuditActionType;
 use App\Domain\Shared\Traits\RecordsAuditLog;
@@ -24,14 +25,8 @@ final class UpdateDepartmentAction
     /**
      * @throws ValidationException
      */
-    public function execute(string $uuid, array $data)
+    public function execute(Department $department, array $data)
     {
-        $department = $this->repository->findByUuid($uuid);
-
-        if (!$department) {
-            throw new ModelNotFoundException();
-        }
-
         if (!empty($data['email']) && $data['email'] !== $department->email) {
             $this->guard->ensureEmailUniqueExceptUuid($data['email'], $department->uuid);
         }

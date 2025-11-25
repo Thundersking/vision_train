@@ -70,11 +70,15 @@ final class UserController extends Controller
      */
     public function update(string $uuid, UserUpdateRequest $request, UpdateUserAction $action): UserDetailResource
     {
+        /** @var User $user */
         $user = $this->repository->findByUuid($uuid);
 
-//        $this->authorize('update', $user);
+        if (!$user) {
+            throw new ModelNotFoundException();
+        }
 
-        $updatedUser = $action->execute($uuid, $request->validated());
+//        $this->authorize('update', $user);
+        $updatedUser = $action->execute($user, $request->validated());
 
         return new UserDetailResource($updatedUser);
     }

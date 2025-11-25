@@ -26,14 +26,8 @@ final class UpdateUserAction
      * @throws ValidationException
      * @throws \Exception
      */
-    public function execute(string $uuid, array $data): User
+    public function execute(User $user, array $data)
     {
-        $user = $this->repository->findByUuid($uuid);
-
-        if (!$user) {
-            throw new ModelNotFoundException();
-        }
-
         // Проверяем уникальность email если он изменяется
         if (isset($data['email']) && $data['email'] !== $user->email) {
             $this->guard->ensureEmailUniqueExceptUuid($data['email'], $user->uuid);
@@ -46,20 +40,21 @@ final class UpdateUserAction
                 $data['password'] = Hash::make($data['password']);
             }
 
-            $newData = $this->repository->update($user->id, $data);
+            $updated = $this->repository->update($user->id, $data);
+            $newData = $updated?->toArray();
 
-            if (!empty($newData['roles']) && is_array($newData['roles'])) {
-                $user->syncRoles($newData['roles']);
+            if (!empty($updated['roles']) && is_array($updated['roles'])) {
+                $user->syncRoles($updated['roles']);
             }
 
             $this->recordAudit(
                 action: AuditActionType::UPDATED,
                 entity: $user,
                 oldData: array_diff_key($oldData, ['password' => null]),
-                newData: array_diff_key((array)$newData, ['password' => null])
+                newData: array_diff_key($newData, ['password' => null])
             );
 
-            return $newData;
+            return $updated;
         });
     }
 }

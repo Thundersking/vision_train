@@ -14,6 +14,7 @@ use App\Domain\Department\Requests\StoreDepartmentRequest;
 use App\Domain\Department\Requests\UpdateDepartmentRequest;
 use App\Domain\Department\Resources\DepartmentDetailResource;
 use App\Domain\Department\Resources\DepartmentListResource;
+use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\JsonResponse;
@@ -55,12 +56,22 @@ final class DepartmentController extends Controller
 
     /**
      * @throws ValidationException
+     * @throws AuthorizationException
      */
     public function update(string $uuid, UpdateDepartmentRequest $request, UpdateDepartmentAction $action): DepartmentDetailResource
     {
-        $department = $action->execute($uuid, $request->validated());
+        /** @var Department $department */
+        $department = $this->repository->findByUuid($uuid);
 
-        return new DepartmentDetailResource($department);
+        if (!$department) {
+            throw new ModelNotFoundException();
+        }
+
+//        $this->authorize('update', $department);
+
+        $updatedDepartment = $action->execute($department, $request->validated());
+
+        return new DepartmentDetailResource($updatedDepartment);
     }
 
     /**
