@@ -131,6 +131,26 @@ const routes = [
         }
     },
 
+    // Organization
+    {
+        path: '/organization',
+        name: 'organization-show',
+        component: () => import('@/domains/organization/views/Show.vue'),
+        meta: {
+            layout: 'dashboard',
+            title: 'Моя организация'
+        }
+    },
+    {
+        path: '/organization/edit',
+        name: 'organization-edit',
+        component: () => import('@/domains/organization/views/Update.vue'),
+        meta: {
+            layout: 'dashboard',
+            title: 'Редактирование организации'
+        }
+    },
+
     {
         path: '/reports',
         component: () => import('@/domains/reports/views/Index.vue'),

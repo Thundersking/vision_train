@@ -67,6 +67,11 @@ trait RecordsAuditLog
             return $entity->organization_id;
         }
 
+        // Отдельный случай: сама организация
+        if ($entity instanceof \App\Domain\Organization\Models\Organization) {
+            return $entity->id;
+        }
+
         return null;
     }
 

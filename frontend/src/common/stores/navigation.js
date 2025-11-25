@@ -43,6 +43,12 @@ export const useNavigationStore = defineStore('navigation', () => {
       route: '/departments'
     },
     {
+      id: 'organization',
+      title: 'Моя организация',
+      icon: 'organization',
+      route: '/organization'
+    },
+    {
       id: 'reports',
       title: 'Отчеты',
       icon: 'reports',
@@ -70,7 +76,7 @@ export const useNavigationStore = defineStore('navigation', () => {
     },
     {
       title: 'УПРАВЛЕНИЕ',
-      items: ['users', 'departments', 'reports']
+      items: ['users', 'departments', 'organization', 'reports']
     }
   ])
 
@@ -129,6 +135,7 @@ export const useNavigationStore = defineStore('navigation', () => {
       patients: 'pi-users',
       users: 'pi-user',
       departments: 'pi-building',
+      organization: 'pi-briefcase',
       reports: 'pi-file-text'
     }
     return iconMap[menuId] || 'pi-circle'
