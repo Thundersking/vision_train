@@ -8,6 +8,7 @@ use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
 use Illuminate\Http\Request;
 use Illuminate\Validation\ValidationException;
+use Throwable;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -97,6 +98,18 @@ return Application::configure(basePath: dirname(__DIR__))
                     'message' => 'Маршрут не найден.',
                     'code' => 404
                 ], 404);
+            }
+        });
+
+        // 500 Internal Server Error
+        $exceptions->render(function (Throwable $e, Request $request) {
+            if ($request->is('api/*') || $request->expectsJson()) {
+                report($e);
+
+                return response()->json([
+                    'message' => 'Внутренняя ошибка сервера.',
+                    'code' => 500,
+                ], 500);
             }
         });
 
