@@ -8,6 +8,7 @@ const defaultOptions = {
 
 /**
  * Форматирует дату в виде «25 января 2025 г.»
+ * Пример: formatDate('2025-01-25') => "25 января 2025 г."
  */
 export function formatDate(value, options = {}) {
   if (!value) {
@@ -31,6 +32,7 @@ export function formatDate(value, options = {}) {
 
 /**
  * Короткий формат «25 янв» — удобен для таблиц
+ * Пример: formatDateShort('2025-01-25') => "25 янв"
  */
 export function formatDateShort(value, options = {}) {
   return formatDate(value, {
@@ -42,6 +44,7 @@ export function formatDateShort(value, options = {}) {
 
 /**
  * Дата и время (например, «25 января 2025 г., 14:35»)
+ * Пример: formatDateTime('2025-01-25T14:35:00Z') => "25 января 2025 г., 14:35"
  */
 export function formatDateTime(value, options = {}) {
   if (!value) {
@@ -67,6 +70,7 @@ export function formatDateTime(value, options = {}) {
 
 /**
  * Относительное время: «3 часа назад», «через 2 дня» и т.п.
+ * Пример: formatRelative(Date.now() - 3600000) => "1 час назад"
  */
 export function formatRelative(value, baseDate = new Date()) {
   if (!value) {
