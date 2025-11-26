@@ -17,7 +17,6 @@
         :showClear="clearable"
         class="w-full"
         :class="{'p-invalid': hasError}"
-        v-bind="$attrs"
     />
 
     <small class="text-red-500" v-if="hasError">

@@ -21,9 +21,15 @@ final class CreatePatientExaminationAction
     public function execute(Patient $patient, array $data): PatientExamination
     {
         return DB::transaction(function () use ($patient, $data) {
+            $userId = Auth::id();
+
+            if (!$userId) {
+                $userId = $patient->user_id;
+            }
+
             $payload = array_merge($data, [
                 'patient_id' => $patient->id,
-                'user_id' => Auth::id(),
+                'user_id' => $userId,
             ]);
 
             $examination = $this->repository->create($payload);

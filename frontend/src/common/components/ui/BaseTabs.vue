@@ -5,7 +5,7 @@
       class="rounded-2xl"
       @update:value="handleUpdate"
     >
-      <TabList class="px-4 border-b border-slate-100 dark:border-slate-800 overflow-x-auto">
+      <TabList class="overflow-x-auto">
         <Tab
           v-for="tab in normalizedTabs"
           :key="tab.value"
@@ -33,9 +33,17 @@
           class="rounded-b-2xl"
         >
           <div :class="contentClass">
-            <slot :name="tab.value" :tab="tab">
-              <div class="text-sm text-slate-500">Нет контента для вкладки</div>
-            </slot>
+            <template v-if="isTabLoading(tab.value)">
+              <div :class="loadingWrapperClass">
+                <i v-if="loadingIconClass" :class="loadingIconClass" />
+                <p v-if="loadingText" class="text-sm font-medium">{{ loadingText }}</p>
+              </div>
+            </template>
+            <template v-else>
+              <slot :name="tab.value" :tab="tab">
+                <div class="text-sm text-slate-500">Нет контента для вкладки</div>
+              </slot>
+            </template>
           </div>
         </TabPanel>
       </TabPanels>
@@ -71,6 +79,22 @@ const props = defineProps({
   tabClass: {
     type: String,
     default: ''
+  },
+  loading: {
+    type: [Boolean, Object],
+    default: false
+  },
+  loadingText: {
+    type: String,
+    default: 'Загрузка...'
+  },
+  loadingIconClass: {
+    type: String,
+    default: 'pi pi-spin pi-spinner text-2xl text-slate-400 mb-2'
+  },
+  loadingWrapperClass: {
+    type: String,
+    default: 'flex flex-col items-center justify-center min-h-[160px] py-8 text-slate-500 dark:text-slate-400'
   }
 })
 
@@ -118,6 +142,20 @@ onMounted(() => {
     emit('change', activeValue.value)
   }
 })
+
+const isPlainObject = (value) => value && typeof value === 'object' && !Array.isArray(value)
+
+const isTabLoading = (tabValue) => {
+  if (typeof props.loading === 'boolean') {
+    return props.loading
+  }
+
+  if (isPlainObject(props.loading)) {
+    return Boolean(props.loading[tabValue])
+  }
+
+  return false
+}
 
 const handleUpdate = (value) => {
   if (activeValue.value === value) {

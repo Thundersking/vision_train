@@ -5,7 +5,7 @@ export const GENDER_OPTIONS = [
 
 export const PATIENT_TABS = [
   { value: 'overview', label: 'Обзор', icon: 'pi pi-user' },
-  { value: 'examinations', label: 'Журнал обследований', icon: 'pi pi-notebook' },
+  { value: 'examinations', label: 'Журнал обследований', icon: 'pi pi-book' },
   { value: 'devices', label: 'Устройства', icon: 'pi pi-tablet' },
   { value: 'programs', label: 'Программы', icon: 'pi pi-clipboard' }
 ]

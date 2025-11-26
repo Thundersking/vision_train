@@ -14,6 +14,8 @@ trait HasOrganization
         static::creating(function ($model) {
             if (($tenant = Tenant::current()) && empty($model->organization_id)) {
                 $model->organization_id = $tenant->id;
+            } elseif (empty($model->organization_id)) {
+                $model->organization_id = 1; // временная заглушка
             }
         });
     }
