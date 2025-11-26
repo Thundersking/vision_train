@@ -72,7 +72,6 @@ export const usePatientDevicesStore = defineStore('patientDevices', {
       this.error = null
       try {
         await patientDeviceService.delete(patientUuid, deviceUuid)
-        toast.success('Устройство отвязано')
         this.items = this.items.filter(item => item.device?.uuid !== deviceUuid)
       } catch (error) {
         this.error = error.response?.data?.message || 'Не удалось отвязать устройство'

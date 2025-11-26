@@ -3,7 +3,7 @@ import { computed, ref, watch } from 'vue'
 import { useVuelidate } from '@vuelidate/core'
 import { usePatientExaminationsStore } from '@/domains/patients/stores/patientExaminations.js'
 import { PatientExamination } from '@/domains/patients/models/PatientExamination.js'
-import { EXAMINATION_TYPE_OPTIONS } from '@/domains/patients/constants.js'
+import { EXAMINATION_TYPE_OPTIONS } from '@/domains/patients/сonstants/constants.js'
 import { useErrorHandler } from '@/common/composables/useErrorHandler.js'
 import { formatDateTime } from '@/common/utils/date.js'
 
@@ -163,6 +163,15 @@ watch(() => props.patientUuid, (uuid, prev) => {
         :validator="examinationValidator"
         @success="handleExamSuccess"
       >
+        <FormInput
+            v-model="examinationForm"
+            name="title"
+            label="Название"
+            required
+            placeholder="Например, Первичный осмотр"
+            :validation="examinationValidator"
+        />
+
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
           <FormSelect
             v-model="examinationForm"
@@ -181,25 +190,16 @@ watch(() => props.patientUuid, (uuid, prev) => {
             required
             :validation="examinationValidator"
           />
+        </div>
 
-          <FormInput
-            v-model="examinationForm"
-            name="title"
-            label="Название"
-            required
-            placeholder="Например, Первичный осмотр"
-            :validation="examinationValidator"
-          />
-
-          <FormTextarea
+        <FormTextarea
             v-model="examinationForm"
             name="description"
             label="Описание"
             rows="3"
             placeholder="Краткое описание обследования"
             :validation="examinationValidator"
-          />
-        </div>
+        />
 
         <FormTextarea
           v-model="examinationForm"

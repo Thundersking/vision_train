@@ -1,6 +1,6 @@
 import { required, helpers, email, numeric, minValue, maxValue, maxLength } from '@vuelidate/validators'
 import { BaseModel } from '@/core/models/BaseModel.js'
-import { GENDER_OPTIONS } from '@/domains/patients/constants.js'
+import { GENDER_OPTIONS } from '@/domains/patients/сonstants/constants.js'
 
 export class Patient extends BaseModel {
   constructor(data = {}) {

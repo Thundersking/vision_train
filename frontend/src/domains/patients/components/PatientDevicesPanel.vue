@@ -70,7 +70,6 @@ const handleDetach = async (assignment) => {
 
   const success = await confirmDelete({
     deleteFn: () => devicesStore.detach(props.patientUuid, assignment.device.uuid),
-    entityName: 'устройство',
     entityTitle: assignment.device.name || assignment.device.serial_number,
   })
 

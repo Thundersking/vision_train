@@ -67,6 +67,11 @@ trait RecordsAuditLog
             return $entity->organization_id;
         }
 
+        // Если запись связана с пациентом, берем организацию у пациента
+        if (isset($entity->patient) && isset($entity->patient->organization_id)) {
+            return $entity->patient->organization_id;
+        }
+
         // Отдельный случай: сама организация
         if ($entity instanceof \App\Domain\Organization\Models\Organization) {
             return $entity->id;

@@ -5,7 +5,7 @@ import { useVuelidate } from '@vuelidate/core'
 import { usePatientStore } from '@/domains/patients/stores/patient.js'
 import { useUserStore } from '@/domains/users/stores/user.js'
 import { Patient } from '@/domains/patients/models/Patient.js'
-import { GENDER_OPTIONS } from '@/domains/patients/constants.js'
+import { GENDER_OPTIONS } from '@/domains/patients/сonstants/constants.js'
 
 const router = useRouter()
 const store = usePatientStore()
