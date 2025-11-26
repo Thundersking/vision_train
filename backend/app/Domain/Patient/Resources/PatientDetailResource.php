@@ -28,7 +28,10 @@ class PatientDetailResource extends JsonResource
             'birth_date' => $this->birth_date,
             'notes' => $this->notes,
             'is_active' => $this->is_active,
+            'user_id' => $this->user_id,
+            'user_uuid' => $this->doctor?->uuid,
             'doctor' => $this->whenLoaded('doctor', fn() => [
+                'id' => $this->doctor->id,
                 'uuid' => $this->doctor->uuid,
                 'full_name' => $this->doctor->name,
                 'email' => $this->doctor->email,

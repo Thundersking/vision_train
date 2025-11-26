@@ -43,11 +43,38 @@ const routes = [
     },
     {
         path: '/patients',
+        name: 'patients',
         component: () => import('@/domains/patients/views/Index.vue'),
         meta: {
             layout: 'dashboard',
-            // requiresAuth: true,
             title: 'Пациенты'
+        }
+    },
+    {
+        path: '/patients/create',
+        name: 'patient-create',
+        component: () => import('@/domains/patients/views/Create.vue'),
+        meta: {
+            layout: 'dashboard',
+            title: 'Создание пациента'
+        }
+    },
+    {
+        path: '/patients/:uuid',
+        name: 'patient-show',
+        component: () => import('@/domains/patients/views/Show.vue'),
+        meta: {
+            layout: 'dashboard',
+            title: 'Карточка пациента'
+        }
+    },
+    {
+        path: '/patients/:uuid/update',
+        name: 'patient-update',
+        component: () => import('@/domains/patients/views/Update.vue'),
+        meta: {
+            layout: 'dashboard',
+            title: 'Редактирование пациента'
         }
     },
 

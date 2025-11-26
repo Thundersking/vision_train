@@ -27,7 +27,10 @@ class PatientListResource extends JsonResource
             'hand_size_cm' => $this->hand_size_cm,
             'birth_date' => $this->birth_date,
             'is_active' => $this->is_active,
+            'user_id' => $this->user_id,
+            'user_uuid' => $this->doctor?->uuid,
             'doctor' => $this->whenLoaded('doctor', fn() => [
+                'id' => $this->doctor->id,
                 'uuid' => $this->doctor->uuid,
                 'full_name' => $this->doctor->name,
                 'email' => $this->doctor->email,

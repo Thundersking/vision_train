@@ -53,4 +53,11 @@ export class BaseApiService {
     delete(id) {
         return apiClient.delete(`/${this.resource}/${id}`);
     }
+
+    /**
+     * Короткий список (uuid + name)
+     */
+    allList(params = {}) {
+        return apiClient.get(`/${this.resource}/all-list`, { params });
+    }
 }

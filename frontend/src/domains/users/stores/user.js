@@ -80,6 +80,17 @@ export const useUserStore = defineStore('user', {
             }
         },
 
+        async allList(params = {}) {
+            try {
+                const response = await userService.allList(params);
+                const data = response.data?.data ?? response.data ?? [];
+                return Array.isArray(data) ? data : [];
+            } catch (error) {
+                this.error = error.response?.data?.message || 'Не удалось загрузить список пользователей';
+                throw error;
+            }
+        },
+
         async show(id) {
             this.loading = true;
             this.error = null;

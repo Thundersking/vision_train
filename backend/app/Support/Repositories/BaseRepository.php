@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Support\Collection as BaseCollection;
 use Ramsey\Uuid\Nonstandard\Uuid;
 
 abstract class BaseRepository
@@ -138,5 +139,28 @@ abstract class BaseRepository
         /** @var Model $instance */
         $instance = new $model();
         return (bool)$instance->newQuery()->insert($rows);
+    }
+
+    /**
+     * Получить короткий список сущностей (uuid + name) для выпадающих списков
+     */
+    public function allList(string $nameField = 'name', ?callable $formatter = null, array $filters = []): BaseCollection
+    {
+        $query = $this->newQuery();
+        $this->applyFilters($query, $filters);
+
+        $items = $query->get();
+
+        return $items->map(function ($item) use ($nameField, $formatter) {
+            if ($formatter) {
+                return $formatter($item);
+            }
+
+            return [
+                'id' => $item->id ?? null,
+                'uuid' => $item->uuid,
+                'name' => data_get($item, $nameField, $item->name ?? null),
+            ];
+        })->filter(fn($row) => !empty($row['uuid']))->values();
     }
 }

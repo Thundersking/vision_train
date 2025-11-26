@@ -20,6 +20,7 @@ class StorePatientRequest extends FormRequest
             'phone' => $this->phone ? trim((string) $this->phone) : null,
             'notes' => $this->notes ? trim((string) $this->notes) : null,
         ]);
+
     }
 
     public function rules(): array

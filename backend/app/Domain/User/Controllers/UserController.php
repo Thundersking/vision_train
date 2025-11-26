@@ -29,6 +29,15 @@ final class UserController extends Controller
         private readonly UserRepository $repository
     ) {}
 
+    public function allList(): JsonResponse
+    {
+        $list = $this->repository->allList('name');
+
+        return response()->json([
+            'data' => $list,
+        ]);
+    }
+
     /**
      * @throws AuthorizationException
      */

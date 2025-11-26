@@ -25,6 +25,7 @@ import BaseForm from "@/common/components/form/BaseForm.vue";
 import FormInput from "@/common/components/form/FormInput.vue";
 import FormPassword from "@/common/components/form/FormPassword.vue";
 import FormSelect from "@/common/components/form/FormSelect.vue";
+import FormTextarea from "@/common/components/form/FormTextarea.vue";
 
 // Импортируем новые stores
 import { useThemeStore } from '@/common/stores/theme.js';
@@ -174,6 +175,7 @@ app.component('BaseDataTable', BaseDataTable);
 app.component('FormInput', FormInput);
 app.component('FormPassword', FormPassword);
 app.component('FormSelect', FormSelect);
+app.component('FormTextarea', FormTextarea);
 app.component('FormDateTime', FormDateTime);
 
 // Компоненты PrimeVue
