@@ -13,6 +13,7 @@
         :showTime="showTime"
         :hourFormat="hourFormat"
         :class="['w-full', {'p-invalid': hasError}]"
+        input-class="w-full"
         v-bind="$attrs"
     />
     <small class="text-red-500" v-if="hasError">

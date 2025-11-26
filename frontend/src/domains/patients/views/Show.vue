@@ -1,21 +1,18 @@
 <script setup>
-import {computed, onMounted, reactive, ref, watch} from 'vue'
+import {computed, onMounted, ref, watch} from 'vue'
 import {useRoute, useRouter} from 'vue-router'
 import {usePatientStore} from '@/domains/patients/stores/patient.js'
-import {usePatientExaminationsStore} from '@/domains/patients/stores/patientExaminations.js'
 import {Patient} from '@/domains/patients/models/Patient.js'
-import {PatientExamination} from '@/domains/patients/models/PatientExamination.js'
 import {useErrorHandler} from '@/common/composables/useErrorHandler.js'
 import {useDeleteConfirmation} from '@/common/composables/useDeleteConfirmation.js'
 import {useTabState} from '@/common/composables/useTabState.js'
-import {EXAMINATION_TYPE_OPTIONS, PATIENT_TABS} from '@/domains/patients/constants.js'
+import {PATIENT_TABS} from '@/domains/patients/constants.js'
 import {formatDate, formatDateTime} from '@/common/utils/date.js'
-import {useVuelidate} from '@vuelidate/core'
+import PatientExaminationsPanel from '@/domains/patients/components/PatientExaminationsPanel.vue'
 
 const route = useRoute()
 const router = useRouter()
 const patientStore = usePatientStore()
-const examinationsStore = usePatientExaminationsStore()
 const {handleError} = useErrorHandler()
 const {confirmDelete} = useDeleteConfirmation()
 
@@ -24,21 +21,7 @@ const loading = ref(false)
 const tabs = PATIENT_TABS
 const activeTab = ref('overview')
 useTabState(activeTab)
-
-const loadedTabs = reactive({
-  examinations: false
-})
-
-const examinations = computed(() => examinationsStore.items)
-const examinationsLoading = computed(() => examinationsStore.loading)
-
-const examinationFormId = 'patient-examination-form'
-const examinationForm = ref(new PatientExamination())
-const examinationSubmitting = ref(false)
-const examinationValidator = useVuelidate(PatientExamination.validationRules(), examinationForm)
-const examinationDialogVisible = ref(false)
-
-const examinationTypeOptions = EXAMINATION_TYPE_OPTIONS
+const isExaminationsTabActive = computed(() => activeTab.value === 'examinations')
 
 const fetchPatient = async () => {
   loading.value = true
@@ -53,14 +36,6 @@ const fetchPatient = async () => {
   }
 }
 
-const fetchExaminations = async () => {
-  try {
-    await examinationsStore.fetch(route.params.uuid)
-  } catch (error) {
-    handleError(error, 'Не удалось загрузить обследования')
-  }
-}
-
 const handleDelete = async () => {
   if (!patient.value) return
   await confirmDelete({
@@ -71,36 +46,6 @@ const handleDelete = async () => {
   })
 }
 
-const handleExamSubmit = async () => {
-  examinationValidator.value.$touch()
-  if (examinationValidator.value.$invalid) {
-    throw new Error('Заполните данные обследования')
-  }
-
-  examinationSubmitting.value = true
-  try {
-    const payload = examinationForm.value.toApiFormat()
-    return await examinationsStore.create(route.params.uuid, payload)
-  } finally {
-    examinationSubmitting.value = false
-  }
-}
-
-const handleExamSuccess = async () => {
-  const preservedType = examinationForm.value.type
-  examinationForm.value = new PatientExamination({type: preservedType})
-  examinationValidator.value.$reset?.()
-  await fetchExaminations()
-  examinationDialogVisible.value = false
-}
-
-watch(activeTab, (tab) => {
-  if (tab === 'examinations' && !loadedTabs.examinations) {
-    loadedTabs.examinations = true
-    fetchExaminations()
-  }
-})
-
 onMounted(() => {
   fetchPatient()
 })
@@ -109,13 +54,7 @@ watch(
     () => route.params.uuid,
     (uuid, prev) => {
       if (!uuid || uuid === prev) return
-      loadedTabs.examinations = false
-      examinationsStore.items = []
       fetchPatient()
-      if (activeTab.value === 'examinations') {
-        loadedTabs.examinations = true
-        fetchExaminations()
-      }
     }
 )
 
@@ -191,115 +130,11 @@ const statusTagSeverity = computed(() => patient.value?.is_active ? 'success' : 
       </template>
 
       <template #examinations>
-        <div class="space-y-4">
-          <h3 class="text-lg font-semibold mb-4">Добавить обследование</h3>
-          <BaseForm
-              :id="examinationFormId"
-              :submit="handleExamSubmit"
-              :validator="examinationValidator"
-              @success="handleExamSuccess"
-          >
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <FormSelect
-                  v-model="examinationForm"
-                  name="type"
-                  label="Тип"
-                  :options="examinationTypeOptions"
-                  required
-                  placeholder="Выберите тип"
-                  :validation="examinationValidator"
-              />
-
-              <FormDateTime
-                  v-model="examinationForm"
-                  name="examination_date"
-                  label="Дата обследования"
-                  required
-                  :validation="examinationValidator"
-              />
-
-              <FormInput
-                  v-model="examinationForm"
-                  name="title"
-                  label="Название"
-                  required
-                  placeholder="Например, Первичный осмотр"
-                  :validation="examinationValidator"
-              />
-
-              <FormTextarea
-                  v-model="examinationForm"
-                  name="description"
-                  label="Описание"
-                  rows="3"
-                  placeholder="Краткое описание обследования"
-                  :validation="examinationValidator"
-              />
-            </div>
-
-            <FormTextarea
-                v-model="examinationForm"
-                name="results"
-                label="Результаты"
-                required
-                rows="4"
-                placeholder="Основные результаты обследования"
-                :validation="examinationValidator"
-            />
-
-            <FormTextarea
-                v-model="examinationForm"
-                name="recommendations"
-                label="Рекомендации"
-                rows="3"
-                placeholder="Рекомендации пациенту"
-                :validation="examinationValidator"
-            />
-
-            <template #actions>
-              <div class="flex justify-end">
-                <Button
-                    type="submit"
-                    label="Сохранить"
-                    icon="pi pi-check"
-                    :loading="examinationSubmitting"
-                />
-              </div>
-            </template>
-          </BaseForm>
-
-          <template v-if="examinations && examinations.length">
-            <div class="overflow-x-auto">
-              <table class="min-w-full divide-y divide-slate-200 dark:divide-slate-700 text-sm">
-                <thead class="bg-slate-50 dark:bg-slate-800">
-                <tr>
-                  <th class="px-4 py-2 text-left font-semibold">Тип</th>
-                  <th class="px-4 py-2 text-left font-semibold">Дата</th>
-                  <th class="px-4 py-2 text-left font-semibold">Врач</th>
-                  <th class="px-4 py-2 text-left font-semibold">Результаты</th>
-                </tr>
-                </thead>
-                <tbody class="divide-y divide-slate-100 dark:divide-slate-800">
-                <tr v-for="exam in examinations" :key="exam.uuid">
-                  <td class="px-4 py-3">
-                    {{ exam.type_label || exam.type }}
-                  </td>
-                  <td class="px-4 py-3">
-                    {{ formatDateTime(exam.examination_date) }}
-                  </td>
-                  <td class="px-4 py-3">
-                    {{ exam.doctor?.full_name || '—' }}
-                  </td>
-                  <td class="px-4 py-3">
-                    <p class="text-slate-600 dark:text-slate-300 whitespace-pre-line">{{ exam.results }}</p>
-                  </td>
-                </tr>
-                </tbody>
-              </table>
-            </div>
-          </template>
-          <div v-else class="text-center text-slate-400">Нет записей обследований</div>
-        </div>
+        <PatientExaminationsPanel
+            :patient="patient"
+            :patient-uuid="route.params.uuid"
+            :active="isExaminationsTabActive"
+        />
       </template>
 
       <template #devices>
