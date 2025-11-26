@@ -15,7 +15,7 @@ import 'primeicons/primeicons.css'
 
 import {
     InputText,
-    Password, Button, DataTable, Column, ColumnGroup, Row, Tag, ToggleSwitch,
+    Password, Button, DataTable, Column, ColumnGroup, Row, Tag, ToggleSwitch, Select, Textarea,
 } from 'primevue';
 
 import App from './App.vue'
@@ -161,6 +161,7 @@ app.use(Toast, {
 })
 app.use(ConfirmationService)
 
+// Кастомные компоненты
 app.component('TitleBlock', TitleBlock);
 app.component('FormSwitch', FormSwitch);
 app.component('BaseForm', BaseForm);
@@ -170,13 +171,18 @@ app.component('BaseDataTable', BaseDataTable);
 app.component('FormInput', FormInput);
 app.component('FormPassword', FormPassword);
 app.component('FormSelect', FormSelect);
+
+// Компоненты PrimeVue
 app.component('Button', Button);
+app.component('Select', Select);
 app.component('Password', Password);
 app.component('ToggleSwitch', ToggleSwitch);
+app.component('Textarea', Textarea);
 app.component('InputText', InputText);
 app.component('DataTable', DataTable);
 app.component('Tag', Tag);
 app.component('Column', Column);
 app.component('ColumnGroup', ColumnGroup);
 app.component('Row', Row);
+
 app.mount('#app')

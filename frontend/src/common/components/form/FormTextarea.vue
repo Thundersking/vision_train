@@ -4,22 +4,18 @@
       {{ label }}
       <span v-if="required" class="text-red-500 ml-1">*</span>
     </label>
-
-    <Select
+    <Textarea
         :id="computedId"
-        :modelValue="modelValue?.[name]"
+        :value="modelValue?.[name]"
         @update:modelValue="updateField"
-        :options="options"
-        :optionLabel="optionLabel"
-        :optionValue="optionValue"
         :placeholder="placeholder"
         :disabled="disabled"
-        :showClear="clearable"
-        class="w-full"
-        :class="{'p-invalid': hasError}"
+        :class="['w-full', {'p-invalid': hasError}]"
         v-bind="$attrs"
+        :autoResize="true"
+        rows="5"
+        cols="30"
     />
-
     <small class="text-red-500" v-if="hasError">
       {{ errorMessage }}
     </small>
@@ -27,8 +23,8 @@
 </template>
 
 <script setup>
-import {computed} from 'vue'
-import {useFormFieldErrors} from "@/common/composables/useFormFieldErrors.js";
+import { computed } from 'vue'
+import { useFormFieldErrors } from '@/common/composables/useFormFieldErrors.js'
 
 const props = defineProps({
   id: {
@@ -41,7 +37,7 @@ const props = defineProps({
   },
   name: {
     type: String,
-    required: true
+    required: true,
   },
   label: {
     type: String,
@@ -51,18 +47,6 @@ const props = defineProps({
     type: Boolean,
     default: false
   },
-  options: {
-    type: Array,
-    default: () => []
-  },
-  optionLabel: {
-    type: String,
-    default: 'label'
-  },
-  optionValue: {
-    type: String,
-    default: 'value'
-  },
   placeholder: {
     type: String,
     default: ''
@@ -71,17 +55,17 @@ const props = defineProps({
     type: Boolean,
     default: false
   },
-  clearable: {
-    type: Boolean,
-    default: false
-  },
   validation: {
     type: Object,
     default: () => null
-  }
+  },
 })
 
-const computedId = computed(() => props.id || `form-select-${props.name}`)
+const emit = defineEmits(['update:modelValue'])
+
+const computedId = computed(() => {
+  return props.id || `form-textarea-${props.name}`;
+})
 
 const { hasError, errorMessage, clearBackendError } = useFormFieldErrors(
     props.name,
@@ -89,9 +73,15 @@ const { hasError, errorMessage, clearBackendError } = useFormFieldErrors(
 );
 
 const updateField = (value) => {
-  props.modelValue[props.name] = value
-  clearBackendError()
+  props.modelValue[props.name] = value;
+  clearBackendError();
+  touchField();
+  emit('update:modelValue', props.modelValue);
+}
 
-  props.validation?.[props.name]?.$touch?.()
+const touchField = () => {
+  const v = props.validation;
+  const key = props.name;
+  v?.[key]?.$touch?.();
 }
 </script>
