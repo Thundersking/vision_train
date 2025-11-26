@@ -31,6 +31,7 @@ import { useThemeStore } from '@/common/stores/theme.js';
 import { useNavigationStore } from '@/common/stores/navigation.js';
 import TitleBlock from "@/common/components/ui/TitleBlock.vue";
 import Card from "@/common/components/ui/Card.vue";
+import BaseTabs from "@/common/components/ui/BaseTabs.vue";
 import BaseDataTable from "@/common/components/table/BaseDataTable.vue";
 import FieldDisplay from "@/common/components/ui/FieldDisplay.vue";
 import FormSwitch from "@/common/components/form/FormSwitch.vue";
@@ -163,6 +164,7 @@ app.use(ConfirmationService)
 
 // Кастомные компоненты
 app.component('TitleBlock', TitleBlock);
+app.component('BaseTabs', BaseTabs);
 app.component('FormSwitch', FormSwitch);
 app.component('BaseForm', BaseForm);
 app.component('Card', Card);
