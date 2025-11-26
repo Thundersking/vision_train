@@ -8,6 +8,7 @@ use App\Domain\Organization\Actions\UpdateOrganizationAction;
 use App\Domain\Organization\Repositories\OrganizationRepository;
 use App\Domain\Organization\Requests\UpdateOrganizationRequest;
 use App\Domain\Organization\Resources\OrganizationResource;
+use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Routing\Controller;
@@ -20,6 +21,9 @@ final class OrganizationController extends Controller
         private readonly OrganizationRepository $repository,
     ) {}
 
+    /**
+     * @throws AuthorizationException
+     */
     public function show(): OrganizationResource
     {
 //        TODO: поправить обязательно - брать текущую организацию - сейчас заглушка
@@ -29,9 +33,14 @@ final class OrganizationController extends Controller
             throw new ModelNotFoundException();
         }
 
+//        $this->authorize('view', $organization);
+
         return new OrganizationResource($organization);
     }
 
+    /**
+     * @throws AuthorizationException
+     */
     public function update(UpdateOrganizationRequest $request, UpdateOrganizationAction $updateAction): OrganizationResource
     {
         $organization = $this->repository->findCurrent();
@@ -39,6 +48,8 @@ final class OrganizationController extends Controller
         if (!$organization) {
             throw new ModelNotFoundException();
         }
+
+//        $this->authorize('update', $organization);
 
         $updatedOrganization = $updateAction->execute($organization, $request->validated());
 
