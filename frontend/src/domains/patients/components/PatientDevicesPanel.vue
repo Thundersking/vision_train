@@ -32,6 +32,7 @@ const devices = computed(() => devicesStore.items)
 const loading = computed(() => devicesStore.loading)
 const tokenLoading = computed(() => devicesStore.tokenLoading)
 const activeToken = computed(() => devicesStore.activeToken)
+const hasActiveToken = computed(() => Boolean(activeToken.value))
 const qrPayload = computed(() => activeToken.value?.qr_payload ?? null)
 
 const qrValue = computed(() => qrPayload.value?.endpoint ?? qrPayload.value?.token ?? '')
@@ -104,13 +105,6 @@ watch(() => props.patientUuid, (uuid, prev) => {
   <div class="space-y-4">
     <div class="flex flex-wrap gap-3 justify-end">
       <Button
-        label="Показать QR"
-        icon="pi pi-qrcode"
-        severity="secondary"
-        :disabled="!activeToken || tokenLoading"
-        @click="handleShowExistingToken"
-      />
-      <Button
         label="Сгенерировать QR"
         icon="pi pi-refresh"
         :loading="tokenLoading"
@@ -135,12 +129,28 @@ watch(() => props.patientUuid, (uuid, prev) => {
         Управляйте QR-кодами для подключения устройства пациента
       </template>
 
-      <div v-if="activeToken" class="space-y-1 text-sm">
-        <div class="flex items-center gap-2">
-          <Tag :value="activeToken.status_label || activeToken.status" severity="info" />
-          <span class="text-slate-500">Истекает: {{ activeToken.expires_at ? formatDateTime(activeToken.expires_at) : '—' }}</span>
+      <div v-if="hasActiveToken" class="space-y-2 text-sm">
+        <div class="flex items-center justify-between gap-3">
+          <div class="flex flex-wrap items-center gap-2">
+            <Tag :value="activeToken.status_label || activeToken.status" severity="info" />
+            <span class="text-slate-500">
+              Истекает: {{ activeToken.expires_at ? formatDateTime(activeToken.expires_at) : '—' }}
+            </span>
+          </div>
+          <Button
+            v-tooltip.top="'Показать QR'"
+            icon="pi pi-qrcode"
+            severity="secondary"
+            text
+            rounded
+            :loading="tokenLoading"
+            :disabled="!hasActiveToken"
+            @click="handleShowExistingToken"
+          />
         </div>
-        <p class="text-slate-500">Сгенерирован: {{ formatDateTime(activeToken.created_at) }}</p>
+        <p class="text-slate-500">
+          Сгенерирован: {{ activeToken.created_at ? formatDateTime(activeToken.created_at) : '—' }}
+        </p>
       </div>
       <div v-else class="text-slate-500 text-sm">
         Активного токена подключения нет. Сгенерируйте новый QR-код.

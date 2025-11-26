@@ -47,9 +47,16 @@ export const usePatientDevicesStore = defineStore('patientDevices', {
       this.error = null
       try {
         const response = await patientDeviceService.generateToken(patientUuid, payload)
-        this.activeToken = response.data ?? response
+        const data = response.data ?? {}
+        const token = { ...(data.data ?? data) }
+
+        if (data.qr_payload) {
+          token.qr_payload = data.qr_payload
+        }
+
+        this.activeToken = token
         toast.success('QR-код успешно сгенерирован')
-        return this.activeToken
+        return token
       } catch (error) {
         this.error = error.response?.data?.message || 'Не удалось сгенерировать токен'
         throw error
