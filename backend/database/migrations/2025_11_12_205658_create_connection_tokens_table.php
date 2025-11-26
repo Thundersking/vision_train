@@ -20,11 +20,13 @@ return new class extends Migration
             // Связи
             $table->foreignId('organization_id')->constrained()->onDelete('cascade');
             $table->foreignId('patient_id')->constrained()->onDelete('cascade');
+            $table->foreignId('created_by')->nullable()->constrained('users')->nullOnDelete();
             
             // Основные поля
             $table->string('token', 100)->unique(); // уникальный токен
             $table->string('qr_code_path', 500)->nullable(); // путь к QR-коду
             $table->timestamp('expires_at')->nullable(); // когда истекает
+            $table->string('status', 20)->default('pending');
             $table->timestamp('used_at')->nullable(); // когда использован
             $table->boolean('is_active')->default(true);
             
@@ -35,6 +37,7 @@ return new class extends Migration
             $table->index(['token']);
             $table->index(['expires_at']);
             $table->index(['is_active']);
+            $table->index('status');
         });
     }
 

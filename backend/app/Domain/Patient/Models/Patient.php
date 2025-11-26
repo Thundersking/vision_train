@@ -12,6 +12,7 @@ use App\Domain\Shared\Traits\RecordsAuditLog;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Model;
 
@@ -81,7 +82,7 @@ class Patient extends Model
     /**
      * Устройства пациента (через pivot таблицу)
      */
-    public function devices(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
+    public function devices(): BelongsToMany
     {
         return $this->belongsToMany(\App\Domain\Device\Models\Device::class, 'patient_devices')
             ->withPivot('is_primary', 'assigned_at', 'assigned_by', 'notes')
@@ -102,6 +103,14 @@ class Patient extends Model
     public function connectionTokens(): HasMany
     {
         return $this->hasMany(ConnectionToken::class);
+    }
+
+    /**
+     * Прямой доступ к pivot-записям устройств пациента
+     */
+    public function patientDevices(): HasMany
+    {
+        return $this->hasMany(PatientDevice::class);
     }
 
     /**

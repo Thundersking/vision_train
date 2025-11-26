@@ -27,6 +27,7 @@ return new class extends Migration
             $table->text('notes')->nullable(); // заметки о назначении
             
             $table->timestamps();
+            $table->softDeletes();
             
             // Индексы и ограничения
             $table->unique(['patient_id', 'device_id']);

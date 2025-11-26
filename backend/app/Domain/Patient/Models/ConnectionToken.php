@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Domain\Patient\Models;
 
+use App\Domain\Patient\Enums\ConnectionTokenStatus;
+use App\Domain\User\Models\User;
 use App\Support\Multitenancy\Traits\HasOrganization;
 use App\Support\Traits\HasUuid;
 use App\Domain\Shared\Traits\RecordsAuditLog;
@@ -25,7 +27,9 @@ class ConnectionToken extends Model
         'qr_code_path',
         'expires_at',
         'used_at',
+        'status',
         'is_active',
+        'created_by',
     ];
 
     protected function casts(): array
@@ -34,6 +38,7 @@ class ConnectionToken extends Model
             'expires_at' => 'datetime',
             'used_at' => 'datetime',
             'is_active' => 'boolean',
+            'status' => ConnectionTokenStatus::class,
         ];
     }
 
@@ -46,11 +51,19 @@ class ConnectionToken extends Model
     }
 
     /**
+     * Пользователь, создавший токен
+     */
+    public function creator(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'created_by');
+    }
+
+    /**
      * Проверка, истек ли токен
      */
     public function isExpired(): bool
     {
-        return $this->expires_at && $this->expires_at->isPast();
+        return $this->expires_at !== null && $this->expires_at->isPast();
     }
 
     /**
@@ -58,7 +71,7 @@ class ConnectionToken extends Model
      */
     public function isUsed(): bool
     {
-        return !is_null($this->used_at);
+        return $this->used_at !== null;
     }
 
     /**
@@ -66,6 +79,8 @@ class ConnectionToken extends Model
      */
     public function isValid(): bool
     {
-        return $this->is_active && !$this->isExpired() && !$this->isUsed();
+        return $this->status === ConnectionTokenStatus::PENDING
+            && !$this->isExpired()
+            && !$this->isUsed();
     }
 }

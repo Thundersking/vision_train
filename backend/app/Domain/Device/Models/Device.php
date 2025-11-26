@@ -5,11 +5,13 @@ declare(strict_types=1);
 namespace App\Domain\Device\Models;
 
 use App\Domain\Patient\Models\Patient;
+use App\Domain\Patient\Models\PatientDevice;
 use App\Support\Multitenancy\Traits\HasOrganization;
 use App\Support\Traits\HasUuid;
 use App\Domain\Shared\Traits\RecordsAuditLog;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Model;
 
@@ -49,5 +51,13 @@ class Device extends Model
         return $this->belongsToMany(Patient::class, 'patient_devices')
             ->withPivot('is_primary', 'assigned_at', 'assigned_by', 'notes')
             ->withTimestamps();
+    }
+
+    /**
+     * Pivot-записи, связывающие устройство с пациентами
+     */
+    public function patientDevices(): HasMany
+    {
+        return $this->hasMany(PatientDevice::class);
     }
 }
