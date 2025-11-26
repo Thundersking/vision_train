@@ -15,7 +15,7 @@ import 'primeicons/primeicons.css'
 
 import {
     InputText,
-    Password, Button, DataTable, Column, ColumnGroup, Row, Tag, ToggleSwitch, Select, Textarea,
+    Password, Button, DataTable, Column, ColumnGroup, Row, Tag, ToggleSwitch, Select, Textarea, DatePicker,
 } from 'primevue';
 
 import App from './App.vue'
@@ -35,6 +35,7 @@ import BaseTabs from "@/common/components/ui/BaseTabs.vue";
 import BaseDataTable from "@/common/components/table/BaseDataTable.vue";
 import FieldDisplay from "@/common/components/ui/FieldDisplay.vue";
 import FormSwitch from "@/common/components/form/FormSwitch.vue";
+import FormDateTime from "@/common/components/form/FormDateTime.vue";
 
 
 const MyCustomPreset = definePreset(Lara, {
@@ -173,10 +174,12 @@ app.component('BaseDataTable', BaseDataTable);
 app.component('FormInput', FormInput);
 app.component('FormPassword', FormPassword);
 app.component('FormSelect', FormSelect);
+app.component('FormDateTime', FormDateTime);
 
 // Компоненты PrimeVue
 app.component('Button', Button);
 app.component('Select', Select);
+app.component('DatePicker', DatePicker);
 app.component('Password', Password);
 app.component('ToggleSwitch', ToggleSwitch);
 app.component('Textarea', Textarea);
