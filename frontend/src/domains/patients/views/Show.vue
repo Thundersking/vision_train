@@ -9,6 +9,7 @@ import {useTabState} from '@/common/composables/useTabState.js'
 import {PATIENT_TABS} from '@/domains/patients/constants.js'
 import {formatDate, formatDateTime} from '@/common/utils/date.js'
 import PatientExaminationsPanel from '@/domains/patients/components/PatientExaminationsPanel.vue'
+import PatientDevicesPanel from '@/domains/patients/components/PatientDevicesPanel.vue'
 
 const route = useRoute()
 const router = useRouter()
@@ -22,6 +23,7 @@ const tabs = PATIENT_TABS
 const activeTab = ref('overview')
 useTabState(activeTab)
 const isExaminationsTabActive = computed(() => activeTab.value === 'examinations')
+const isDevicesTabActive = computed(() => activeTab.value === 'devices')
 
 const fetchPatient = async () => {
   loading.value = true
@@ -138,9 +140,11 @@ const statusTagSeverity = computed(() => patient.value?.is_active ? 'success' : 
       </template>
 
       <template #devices>
-        <div class="text-slate-500 dark:text-slate-400">
-          Раздел устройств будет реализован на следующем этапе.
-        </div>
+        <PatientDevicesPanel
+            :patient="patient"
+            :patient-uuid="route.params.uuid"
+            :active="isDevicesTabActive"
+        />
       </template>
 
       <template #programs>
