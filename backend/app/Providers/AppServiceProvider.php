@@ -7,7 +7,6 @@ use App\Domain\Department\Policies\DepartmentPolicy;
 use App\Domain\Organization\Models\Organization;
 use App\Domain\Organization\Policies\OrganizationPolicy;
 use App\Domain\Patient\Models\Patient;
-use App\Domain\Patient\Policies\PatientPolicy;
 use App\Domain\User\Models\User;
 use App\Domain\User\Policies\UserPolicy;
 use Illuminate\Support\Facades\Gate;
@@ -31,6 +30,5 @@ class AppServiceProvider extends ServiceProvider
         Gate::policy(User::class, UserPolicy::class);
         Gate::policy(Department::class, DepartmentPolicy::class);
         Gate::policy(Organization::class, OrganizationPolicy::class);
-        Gate::policy(Patient::class, PatientPolicy::class);
     }
 }
