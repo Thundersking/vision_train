@@ -1,5 +1,5 @@
 <script setup>
-import { onMounted, ref } from 'vue'
+import { computed, onMounted, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useVuelidate } from '@vuelidate/core'
 import { ExerciseTemplate } from '@/domains/exercise-templates/models/ExerciseTemplate.js'
@@ -7,11 +7,13 @@ import { useExerciseTemplateStore } from '@/domains/exercise-templates/stores/ex
 import { useExerciseTypeStore } from '@/domains/exercise-types/stores/exerciseType.js'
 import { DIFFICULTY_OPTIONS } from '@/domains/exercise-templates/constants.js'
 import ExerciseTemplatePayloadEditor from '@/domains/exercise-templates/components/ExerciseTemplatePayloadEditor.vue'
+import { useReferenceStore } from '@/common/stores/reference.js'
 
 const route = useRoute()
 const router = useRouter()
 const templateStore = useExerciseTemplateStore()
 const exerciseTypeStore = useExerciseTypeStore()
+const referenceStore = useReferenceStore()
 
 const form = ref(new ExerciseTemplate())
 const typeOptions = ref([])
@@ -19,13 +21,15 @@ const formId = 'exercise-template-form-update'
 const loading = ref(true)
 const isSubmitting = ref(false)
 const $v = useVuelidate(ExerciseTemplate.validationRules(), form)
+const unitOptions = computed(() => referenceStore.units)
 
 const initialize = async () => {
   loading.value = true
   try {
     const [options, template] = await Promise.all([
       exerciseTypeStore.allList(),
-      templateStore.show(route.params.uuid)
+      templateStore.show(route.params.uuid),
+      referenceStore.fetchUnits()
     ])
     typeOptions.value = options
     form.value = new ExerciseTemplate(template)
@@ -128,6 +132,7 @@ const handleSuccess = () => {
         <ExerciseTemplatePayloadEditor
           v-model="form"
           :validation="$v"
+          :unit-options="unitOptions"
           class="mt-6"
         />
       </BaseForm>

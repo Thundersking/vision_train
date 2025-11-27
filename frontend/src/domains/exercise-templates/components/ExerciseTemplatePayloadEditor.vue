@@ -1,5 +1,5 @@
 <script setup>
-import { computed } from 'vue'
+import { computed, onMounted, watch } from 'vue'
 import { ExerciseTemplate } from '@/domains/exercise-templates/models/ExerciseTemplate.js'
 
 const props = defineProps({
@@ -10,6 +10,10 @@ const props = defineProps({
   validation: {
     type: Object,
     default: null
+  },
+  unitOptions: {
+    type: Array,
+    default: () => []
   }
 })
 
@@ -29,6 +33,48 @@ const touchSteps = () => {
 const emitChange = () => {
   emit('update:modelValue', form.value)
 }
+
+const duplicateParameterLabels = computed(() => {
+  const buckets = form.value.parameters.reduce((acc, parameter) => {
+    const label = (parameter.label || '').trim().toLowerCase()
+    if (!label) {
+      return acc
+    }
+    acc[label] = acc[label] || []
+    acc[label].push(parameter.uid)
+    return acc
+  }, {})
+
+  return new Set(
+    Object.values(buckets)
+      .filter((ids) => ids.length > 1)
+      .flat()
+  )
+})
+
+const totalDuration = computed(() => {
+  return form.value.steps.reduce((sum, step) => {
+    const duration = Number(step.duration)
+    if (Number.isFinite(duration) && duration > 0) {
+      return sum + duration
+    }
+    return sum
+  }, 0)
+})
+
+watch(
+  totalDuration,
+  (value) => {
+    form.value.duration_seconds = value
+    emitChange()
+  },
+  { immediate: true }
+)
+
+onMounted(() => {
+  form.value.duration_seconds = totalDuration.value
+  emitChange()
+})
 
 const addParameter = () => {
   form.value.parameters.push(ExerciseTemplate.createEmptyParameter())
@@ -69,9 +115,9 @@ const removeStep = (index) => {
           name="duration_seconds"
           type="number"
           label="Общая длительность (сек.)"
-          placeholder="Например, 300 (5 минут)"
-          required
-          :validation="validation"
+          placeholder="Высчитывается из шагов"
+          readonly
+          disabled
         />
         <FormTextarea
           v-model="form"
@@ -122,12 +168,7 @@ const removeStep = (index) => {
               name="label"
               label="Отображаемое название"
               placeholder="Например, Амплитуда сетки"
-            />
-            <FormInput
-              :model-value="parameter"
-              name="key"
-              label="Системный ключ"
-              placeholder="Например, amp_range"
+              class="md:col-span-2"
             />
             <FormInput
               :model-value="parameter"
@@ -135,13 +176,19 @@ const removeStep = (index) => {
               label="Целевое значение"
               placeholder="Например, 45-60"
             />
-            <FormInput
+            <FormSelect
               :model-value="parameter"
               name="unit"
               label="Единицы измерения"
-              placeholder="Например, deg"
+              :options="unitOptions"
+              optionLabel="name"
+              optionValue="id"
+              placeholder="Выберите значение"
             />
           </div>
+          <p v-if="duplicateParameterLabels.has(parameter.uid)" class="text-sm text-red-500 mt-2">
+            Параметры с одинаковым названием недопустимы
+          </p>
         </div>
       </div>
       <p v-else class="text-sm text-muted-color">Пока нет параметров — добавьте при необходимости</p>

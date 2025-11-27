@@ -21,38 +21,43 @@ const loadData = async () => {
 
 onMounted(loadData)
 
-const parsedPayload = computed(() => {
-  if (!template.value?.payload) return null
-  if (typeof template.value.payload === 'string') {
-    try {
-      return JSON.parse(template.value.payload)
-    } catch (e) {
-      return null
-    }
-  }
-  return template.value.payload
-})
-
-const steps = computed(() => {
-  if (!parsedPayload.value?.steps || !Array.isArray(parsedPayload.value.steps)) {
+const steps = computed(() => template.value?.steps ?? [])
+const parameters = computed(() => template.value?.parameters ?? [])
+const extraPayload = computed(() => {
+  const payload = template.value?.extra_payload
+  if (!payload || typeof payload !== 'object') {
     return []
   }
-  return parsedPayload.value.steps
+
+  return Object.entries(payload).map(([key, value]) => ({ key, value }))
 })
 
-const payloadDetails = computed(() => {
-  if (!parsedPayload.value) return []
-  const base = { ...parsedPayload.value }
-  delete base.steps
-  return Object.entries(base).map(([key, value]) => ({
-    key,
-    value
-  }))
+const formattedDuration = computed(() => {
+  const seconds = Number(template.value?.duration_seconds)
+  if (!Number.isFinite(seconds) || seconds <= 0) {
+    return '—'
+  }
+
+  const minutes = Math.floor(seconds / 60)
+  const restSeconds = seconds % 60
+
+  if (!minutes) {
+    return `${restSeconds} сек`
+  }
+
+  if (!restSeconds) {
+    return `${minutes} мин`
+  }
+
+  return `${minutes} мин ${restSeconds} сек`
 })
 
 const formatValue = (value) => {
-  if (typeof value === 'number' || typeof value === 'boolean') {
+  if (typeof value === 'boolean') {
     return value ? 'Да' : 'Нет'
+  }
+  if (typeof value === 'number') {
+    return value
   }
   if (typeof value === 'string') {
     return value
@@ -107,22 +112,53 @@ const formatValue = (value) => {
               :severity="template.is_active ? 'success' : 'danger'"
             />
           </div>
+          <div>
+            <p class="text-sm text-gray-500">Общая длительность</p>
+            <p class="font-medium">{{ formattedDuration }}</p>
+          </div>
         </div>
 
         <div class="mt-8 space-y-6">
           <section>
             <h3 class="text-lg font-semibold mb-3">Основные параметры</h3>
-            <div v-if="payloadDetails.length" class="space-y-3">
+            <div class="space-y-3">
+              <div class="border rounded-lg p-3" v-if="template.instructions">
+                <p class="text-sm text-gray-500">Инструкции</p>
+                <p class="font-medium whitespace-pre-line">{{ template.instructions }}</p>
+              </div>
               <div
-                v-for="detail in payloadDetails"
+                v-for="detail in extraPayload"
                 :key="detail.key"
                 class="border rounded-lg p-3"
               >
                 <p class="text-sm text-gray-500">{{ detail.key }}</p>
                 <p class="font-medium">{{ formatValue(detail.value) }}</p>
               </div>
+              <p v-if="!template.instructions && !extraPayload.length" class="text-sm text-gray-500">
+                Нет дополнительных параметров
+              </p>
             </div>
-            <p v-else class="text-sm text-gray-500">Параметры не заполнены</p>
+          </section>
+
+          <section>
+            <div class="flex items-center justify-between mb-3">
+              <h3 class="text-lg font-semibold">Целевые параметры</h3>
+              <span class="text-sm text-gray-500" v-if="parameters.length">{{ parameters.length }}</span>
+            </div>
+            <div v-if="parameters.length" class="space-y-3">
+              <div
+                v-for="parameter in parameters"
+                :key="parameter.key || parameter.label || parameter.unit"
+                class="border rounded-lg p-3"
+              >
+                <p class="font-semibold">{{ parameter.label || parameter.key || 'Параметр' }}</p>
+                <p class="text-sm text-gray-500 mt-1">
+                  Цель: {{ parameter.target_value || '—' }}
+                  <span v-if="parameter.unit">{{ parameter.unit }}</span>
+                </p>
+              </div>
+            </div>
+            <p v-else class="text-sm text-gray-500">Целевые параметры не заданы</p>
           </section>
 
           <section>

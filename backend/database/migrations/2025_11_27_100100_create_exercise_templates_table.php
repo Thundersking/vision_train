@@ -17,7 +17,9 @@ return new class extends Migration
             $table->string('title');
             $table->string('short_description')->nullable();
             $table->string('difficulty')->nullable();
-            $table->jsonb('payload_json');
+            $table->unsignedInteger('duration_seconds')->default(0);
+            $table->text('instructions')->nullable();
+            $table->jsonb('extra_payload_json')->nullable();
             $table->boolean('is_active')->default(true);
             $table->timestamps();
 
@@ -35,10 +37,47 @@ return new class extends Migration
             $table->index(['organization_id', 'title']);
             $table->comment('Готовые сценарии упражнений, связанные с типами');
         });
+
+        Schema::create('exercise_template_steps', function (Blueprint $table) {
+            $table->id();
+            $table->unsignedBigInteger('exercise_template_id');
+            $table->unsignedInteger('step_order')->default(1);
+            $table->string('title');
+            $table->unsignedInteger('duration')->default(0);
+            $table->text('description')->nullable();
+            $table->text('hint')->nullable();
+            $table->timestamps();
+
+            $table->foreign('exercise_template_id')
+                ->references('id')
+                ->on('exercise_templates')
+                ->onDelete('cascade');
+
+            $table->index(['exercise_template_id', 'step_order']);
+        });
+
+        Schema::create('exercise_template_parameters', function (Blueprint $table) {
+            $table->id();
+            $table->unsignedBigInteger('exercise_template_id');
+            $table->string('label')->nullable();
+            $table->string('key')->nullable();
+            $table->string('target_value')->nullable();
+            $table->string('unit')->nullable();
+            $table->timestamps();
+
+            $table->foreign('exercise_template_id')
+                ->references('id')
+                ->on('exercise_templates')
+                ->onDelete('cascade');
+
+            $table->index(['exercise_template_id', 'key']);
+        });
     }
 
     public function down(): void
     {
+        Schema::dropIfExists('exercise_template_parameters');
+        Schema::dropIfExists('exercise_template_steps');
         Schema::dropIfExists('exercise_templates');
     }
 };

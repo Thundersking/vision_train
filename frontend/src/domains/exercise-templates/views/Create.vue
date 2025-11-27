@@ -1,5 +1,5 @@
 <script setup>
-import { onMounted, ref } from 'vue'
+import { computed, onMounted, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { useVuelidate } from '@vuelidate/core'
 import { ExerciseTemplate } from '@/domains/exercise-templates/models/ExerciseTemplate.js'
@@ -7,29 +7,36 @@ import { useExerciseTemplateStore } from '@/domains/exercise-templates/stores/ex
 import { useExerciseTypeStore } from '@/domains/exercise-types/stores/exerciseType.js'
 import { DIFFICULTY_OPTIONS } from '@/domains/exercise-templates/constants.js'
 import ExerciseTemplatePayloadEditor from '@/domains/exercise-templates/components/ExerciseTemplatePayloadEditor.vue'
+import { useReferenceStore } from '@/common/stores/reference.js'
 
 const router = useRouter()
 const templateStore = useExerciseTemplateStore()
 const exerciseTypeStore = useExerciseTypeStore()
+const referenceStore = useReferenceStore()
 
 const form = ref(new ExerciseTemplate())
 const formId = 'exercise-template-form-create'
 const isSubmitting = ref(false)
 const loadingTypes = ref(false)
 const typeOptions = ref([])
+const unitOptions = computed(() => referenceStore.units)
 
 const $v = useVuelidate(ExerciseTemplate.validationRules(), form)
 
-const fetchTypeOptions = async () => {
+const fetchLookups = async () => {
   loadingTypes.value = true
   try {
-    typeOptions.value = await exerciseTypeStore.allList()
+    const [types] = await Promise.all([
+      exerciseTypeStore.allList(),
+      referenceStore.fetchUnits()
+    ])
+    typeOptions.value = types
   } finally {
     loadingTypes.value = false
   }
 }
 
-onMounted(fetchTypeOptions)
+onMounted(fetchLookups)
 
 const handleFormSubmit = async () => {
   $v.value.$touch()
@@ -123,6 +130,7 @@ const handleSuccess = () => {
         <ExerciseTemplatePayloadEditor
           v-model="form"
           :validation="$v"
+          :unit-options="unitOptions"
           class="mt-6"
         />
       </BaseForm>

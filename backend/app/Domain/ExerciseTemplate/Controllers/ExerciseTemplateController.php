@@ -37,7 +37,7 @@ final class ExerciseTemplateController extends Controller
 
     public function show(string $uuid): ExerciseTemplateDetailResource
     {
-        $template = $this->repository->findWithRelations($uuid, ['type']);
+        $template = $this->repository->findWithRelations($uuid, ['type', 'steps', 'parameters']);
 
         if (!$template) {
             throw new ModelNotFoundException();
@@ -61,7 +61,7 @@ final class ExerciseTemplateController extends Controller
      */
     public function update(string $uuid, UpdateExerciseTemplateRequest $request, UpdateExerciseTemplateAction $action): ExerciseTemplateDetailResource
     {
-        $template = $this->repository->findWithRelations($uuid, ['type']);
+        $template = $this->repository->findWithRelations($uuid, ['type', 'steps', 'parameters']);
 
         if (!$template) {
             throw new ModelNotFoundException();

@@ -28,14 +28,14 @@ trait RecordsAuditLog
             $oldData = $this->excludeFields($oldData, $entity);
             $newData = $this->excludeFields($newData, $entity);
 
-            $changedFields = array_diff_assoc($newData, $oldData);
+            $changedKeys = $this->detectChangedKeys($oldData, $newData);
 
-            if (empty($changedFields)) {
+            if (empty($changedKeys)) {
                 return;
             }
 
-            $oldData = $this->prepareData(array_intersect_key($oldData, $changedFields));
-            $newData = $this->prepareData($changedFields);
+            $oldData = $this->prepareData(array_intersect_key($oldData, array_flip($changedKeys)));
+            $newData = $this->prepareData(array_intersect_key($newData, array_flip($changedKeys)));
         } elseif ($newData !== null) {
             $newData = $this->prepareData($this->excludeFields($newData, $entity));
         }
@@ -101,8 +101,94 @@ trait RecordsAuditLog
             if (is_string($value) && strlen($value) > self::TEXT_TRUNCATE_LENGTH) {
                 $data[$key] = substr($value, 0, self::TEXT_PREVIEW_LENGTH)
                     . '... [обрезано, ' . strlen($value) . ' символов]';
+                continue;
+            }
+
+            if (is_array($value)) {
+                $data[$key] = $this->prepareArrayData($value);
             }
         }
         return $data;
+    }
+
+    private function prepareArrayData(array $value): array
+    {
+        foreach ($value as $key => $item) {
+            if (is_array($item)) {
+                $value[$key] = $this->prepareArrayData($item);
+                continue;
+            }
+
+            if (is_string($item) && strlen($item) > self::TEXT_TRUNCATE_LENGTH) {
+                $value[$key] = substr($item, 0, self::TEXT_PREVIEW_LENGTH)
+                    . '... [обрезано, ' . strlen($item) . ' символов]';
+            }
+        }
+
+        return $value;
+    }
+
+    private function detectChangedKeys(array $oldData, array $newData): array
+    {
+        $changed = [];
+
+        foreach ($newData as $key => $value) {
+            $oldValue = $oldData[$key] ?? null;
+
+            if (!array_key_exists($key, $oldData)) {
+                $changed[] = $key;
+                continue;
+            }
+
+            if ($this->valuesAreDifferent($oldValue, $value)) {
+                $changed[] = $key;
+            }
+        }
+
+        foreach ($oldData as $key => $value) {
+            if (!array_key_exists($key, $newData)) {
+                $changed[] = $key;
+            }
+        }
+
+        return $changed;
+    }
+
+    private function valuesAreDifferent(mixed $oldValue, mixed $newValue): bool
+    {
+        if (is_array($oldValue) || is_array($newValue)) {
+            return $this->normalizeValue($oldValue) !== $this->normalizeValue($newValue);
+        }
+
+        return $oldValue !== $newValue;
+    }
+
+    private function normalizeValue(mixed $value): string
+    {
+        if (is_array($value)) {
+            return json_encode($this->sortArrayRecursive($value), JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) ?: '';
+        }
+
+        if ($value instanceof \DateTimeInterface) {
+            return $value->format(DATE_ATOM);
+        }
+
+        if (is_object($value)) {
+            return json_encode($value, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) ?: spl_object_hash($value);
+        }
+
+        return var_export($value, true);
+    }
+
+    private function sortArrayRecursive(array $value): array
+    {
+        ksort($value);
+        foreach ($value as $key => $item) {
+            if (is_array($item)) {
+                $value[$key] = $this->sortArrayRecursive($item);
+            }
+        }
+
+        return $value;
     }
 }

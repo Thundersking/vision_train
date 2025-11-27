@@ -26,14 +26,17 @@ class ExerciseTemplate extends Model
         'title',
         'short_description',
         'difficulty',
-        'payload_json',
+        'duration_seconds',
+        'instructions',
+        'extra_payload_json',
         'is_active',
     ];
 
     protected function casts(): array
     {
         return [
-            'payload_json' => 'array',
+            'extra_payload_json' => 'array',
+            'duration_seconds' => 'integer',
             'is_active' => 'boolean',
         ];
     }
@@ -46,5 +49,15 @@ class ExerciseTemplate extends Model
     public function type(): BelongsTo
     {
         return $this->belongsTo(ExerciseType::class, 'exercise_type_id');
+    }
+
+    public function steps()
+    {
+        return $this->hasMany(ExerciseTemplateStep::class, 'exercise_template_id')->orderBy('step_order');
+    }
+
+    public function parameters()
+    {
+        return $this->hasMany(ExerciseTemplateParameter::class, 'exercise_template_id');
     }
 }

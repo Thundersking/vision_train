@@ -46,4 +46,5 @@ class ExerciseTemplateRepository extends BaseRepository
             ->where('uuid', $uuid)
             ->first();
     }
+
 }

@@ -24,17 +24,17 @@ const cryptoRandom = () => {
   return Math.random().toString(36).slice(2)
 }
 
-const parsePayload = (payload) => {
-  if (!payload) return {}
-  if (typeof payload === 'string') {
+const parsePayload = (raw = {}) => {
+  if (!raw) return {}
+  if (typeof raw === 'string') {
     try {
-      return JSON.parse(payload)
+      return JSON.parse(raw)
     } catch (e) {
       return {}
     }
   }
-  if (typeof payload === 'object' && !Array.isArray(payload)) {
-    return payload
+  if (typeof raw === 'object' && !Array.isArray(raw)) {
+    return raw
   }
   return {}
 }
@@ -79,11 +79,6 @@ const hasValidSteps = helpers.withMessage('Добавьте хотя бы оди
   })
 })
 
-const hasDuration = helpers.withMessage('Укажите длительность упражнения в секундах', (value) => {
-  const numeric = Number(value)
-  return Number.isFinite(numeric) && numeric > 0
-})
-
 export class ExerciseTemplate extends BaseModel {
   constructor(data = {}) {
     super(data)
@@ -94,20 +89,14 @@ export class ExerciseTemplate extends BaseModel {
     this.short_description = data.short_description ?? ''
     this.difficulty = data.difficulty ?? 'medium'
     const payload = parsePayload(data.payload ?? data.payload_json)
-    const {
-      steps,
-      parameters,
-      duration_seconds,
-      duration,
-      instructions,
-      ...rest
-    } = payload
+    const resolvedSteps = data.steps ?? payload.steps
+    const resolvedParameters = data.parameters ?? payload.parameters
 
-    this.duration_seconds = duration_seconds ?? duration ?? null
-    this.instructions = instructions ?? ''
-    this.steps = normalizeSteps(steps)
-    this.parameters = normalizeParameters(parameters)
-    this.payloadMeta = rest
+    this.duration_seconds = data.duration_seconds ?? payload.duration_seconds ?? payload.duration ?? null
+    this.instructions = data.instructions ?? payload.instructions ?? ''
+    this.steps = normalizeSteps(resolvedSteps)
+    this.parameters = normalizeParameters(resolvedParameters)
+    this.payloadMeta = data.extra_payload ?? payload.extra_payload ?? payload.meta ?? {}
     this.is_active = data.is_active ?? true
   }
 
@@ -131,22 +120,16 @@ export class ExerciseTemplate extends BaseModel {
         unit: param.unit?.trim() || null
       }))
 
-    const durationSeconds = this.duration_seconds ? Number(this.duration_seconds) : null
-
-    const payload = {
-      ...this.payloadMeta,
-      duration_seconds: durationSeconds,
-      instructions: this.instructions?.trim() || null,
-      parameters: sanitizedParameters,
-      steps: sanitizedSteps
-    }
-
     return {
       exercise_type_id: this.exercise_type_id,
       title: this.title,
       short_description: this.short_description || null,
       difficulty: this.difficulty || null,
-      payload_json: JSON.stringify(payload),
+      duration_seconds: sanitizedSteps.reduce((sum, step) => sum + (step.duration || 0), 0) || null,
+      instructions: this.instructions?.trim() || null,
+      parameters: sanitizedParameters,
+      steps: sanitizedSteps,
+      extra_payload: Object.keys(this.payloadMeta || {}).length ? this.payloadMeta : null,
       is_active: this.is_active
     }
   }
@@ -159,10 +142,6 @@ export class ExerciseTemplate extends BaseModel {
       title: {
         required: helpers.withMessage('Название обязательно', required),
         maxLength: helpers.withMessage('Максимум 255 символов', maxLength(255))
-      },
-      duration_seconds: {
-        required: helpers.withMessage('Укажите длительность упражнения', required),
-        hasDuration
       },
       steps: {
         required: helpers.withMessage('Добавьте хотя бы один шаг', required),
