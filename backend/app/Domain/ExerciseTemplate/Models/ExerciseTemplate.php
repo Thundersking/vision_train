@@ -28,6 +28,13 @@ class ExerciseTemplate extends Model
         'difficulty',
         'duration_seconds',
         'instructions',
+        'ball_count',
+        'ball_size',
+        'target_accuracy_percent',
+        'vertical_area',
+        'horizontal_area',
+        'distance_area',
+        'speed',
         'is_active',
     ];
 
@@ -36,6 +43,9 @@ class ExerciseTemplate extends Model
         return [
             'duration_seconds' => 'integer',
             'is_active' => 'boolean',
+            'ball_count' => 'integer',
+            'ball_size' => 'integer',
+            'target_accuracy_percent' => 'integer',
         ];
     }
 
@@ -47,15 +57,5 @@ class ExerciseTemplate extends Model
     public function type(): BelongsTo
     {
         return $this->belongsTo(ExerciseType::class, 'exercise_type_id');
-    }
-
-    public function steps()
-    {
-        return $this->hasMany(ExerciseTemplateStep::class, 'exercise_template_id')->orderBy('step_order');
-    }
-
-    public function parameters()
-    {
-        return $this->hasMany(ExerciseTemplateParameter::class, 'exercise_template_id');
     }
 }

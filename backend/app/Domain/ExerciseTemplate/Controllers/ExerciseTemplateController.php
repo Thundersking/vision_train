@@ -63,7 +63,7 @@ final class ExerciseTemplateController extends Controller
      */
     public function update(string $uuid, UpdateExerciseTemplateRequest $request, UpdateExerciseTemplateAction $action): ExerciseTemplateDetailResource
     {
-        $template = $this->repository->findWithRelations($uuid, ['type', 'steps', 'parameters']);
+        $template = $this->repository->findWithRelations($uuid, ['type']);
 
         if (!$template) {
             throw new ModelNotFoundException();

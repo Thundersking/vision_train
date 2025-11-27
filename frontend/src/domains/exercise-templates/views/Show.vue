@@ -4,8 +4,6 @@ import {useRoute, useRouter} from 'vue-router'
 import {useExerciseTemplateStore} from '@/domains/exercise-templates/stores/exerciseTemplate.js'
 import {EXERCISE_TEMPLATE_TABS} from '@/domains/exercise-templates/constants/constants.js'
 import {useTabState} from '@/common/composables/useTabState.js'
-import ExerciseTemplateParametersPanel from '@/domains/exercise-templates/components/ExerciseTemplateParametersPanel.vue'
-import ExerciseTemplateStepsPanel from '@/domains/exercise-templates/components/ExerciseTemplateStepsPanel.vue'
 
 const route = useRoute()
 const router = useRouter()
@@ -18,8 +16,6 @@ const activeTab = ref('overview')
 useTabState(activeTab)
 
 const templateUuid = computed(() => route.params.uuid)
-const isParametersTabActive = computed(() => activeTab.value === 'parameters')
-const isStepsTabActive = computed(() => activeTab.value === 'steps')
 
 const loadData = async () => {
   if (!templateUuid.value) {
@@ -168,20 +164,6 @@ const handleEdit = () => {
         <div v-else class="text-center text-slate-400 py-6">
           Данные шаблона недоступны
         </div>
-      </template>
-
-      <template #parameters>
-        <ExerciseTemplateParametersPanel
-            :template-uuid="templateUuid"
-            :active="isParametersTabActive"
-        />
-      </template>
-
-      <template #steps>
-        <ExerciseTemplateStepsPanel
-            :template-uuid="templateUuid"
-            :active="isStepsTabActive"
-        />
       </template>
     </BaseTabs>
   </div>

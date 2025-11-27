@@ -8,16 +8,6 @@ use App\Support\Requests\FormRequest;
 
 final class StoreExerciseTemplateRequest extends FormRequest
 {
-    protected function prepareForValidation(): void
-    {
-        $this->merge([
-            'title' => trim((string) $this->title),
-            'short_description' => $this->short_description ? trim((string) $this->short_description) : null,
-            'difficulty' => $this->difficulty ? trim((string) $this->difficulty) : null,
-            'instructions' => $this->instructions ? trim((string) $this->instructions) : null,
-        ]);
-    }
-
     public function rules(): array
     {
         return [
@@ -27,6 +17,15 @@ final class StoreExerciseTemplateRequest extends FormRequest
             'difficulty' => ['nullable', 'string', 'max:100'],
             'duration_seconds' => ['nullable', 'integer', 'min:1'],
             'instructions' => ['nullable', 'string'],
+
+            'ball_count' => ['required', 'integer', 'between:1,50'],
+            'ball_size' => ['required', 'integer', 'between:1,10'],
+            'target_accuracy_percent' => ['required', 'integer', 'between:1,100'],
+            'vertical_area' => ['required', 'string', 'max:255'],
+            'horizontal_area' => ['required', 'string', 'max:255'],
+            'distance_area' => ['required', 'string', 'max:255'],
+            'speed' => ['required', 'string', 'max:255'],
+
             'is_active' => ['sometimes', 'boolean'],
         ];
     }

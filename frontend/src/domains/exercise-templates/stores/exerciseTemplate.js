@@ -91,64 +91,6 @@ export const useExerciseTemplateStore = defineStore('exercise-templates', {
             } finally {
                 this.loading = false
             }
-        },
-
-        async fetchParameters(uuid) {
-            if (!uuid) {
-                return []
-            }
-
-            const response = await exerciseTemplateService.fetchParameters(uuid)
-            return response.data?.data ?? response.data ?? []
-        },
-
-        async fetchSteps(uuid) {
-            if (!uuid) {
-                return []
-            }
-
-            const response = await exerciseTemplateService.fetchSteps(uuid)
-            return response.data?.data ?? response.data ?? []
-        },
-
-        async createParameter(templateUuid, payload) {
-            try {
-                const response = await exerciseTemplateService.createParameter(templateUuid, payload)
-                toast.success('Целевой параметр добавлен')
-                await this.fetchParameters(templateUuid)
-                return response.data?.data ?? response.data
-            } catch (error) {
-                this.error = error.response?.data?.message || 'Не удалось создать параметр'
-                throw error
-            }
-        },
-
-        async updateParameter(parameterUuid, payload, templateUuid = null) {
-            try {
-                const response = await exerciseTemplateService.updateParameter(parameterUuid, payload)
-                toast.success('Целевой параметр обновлен')
-                if (templateUuid) {
-                    await this.fetchParameters(templateUuid)
-                }
-                return response.data?.data ?? response.data
-            } catch (error) {
-                this.error = error.response?.data?.message || 'Не удалось обновить параметр'
-                throw error
-            }
-        },
-
-        async deleteParameter(parameterUuid, templateUuid = null) {
-            try {
-                const response = await exerciseTemplateService.deleteParameter(parameterUuid)
-                toast.success('Целевой параметр удален')
-                if (templateUuid) {
-                    await this.fetchParameters(templateUuid)
-                }
-                return response.data?.data ?? response.data
-            } catch (error) {
-                this.error = error.response?.data?.message || 'Не удалось удалить параметр'
-                throw error
-            }
         }
     }
 })
