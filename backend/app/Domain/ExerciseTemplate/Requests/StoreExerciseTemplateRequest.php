@@ -4,9 +4,7 @@ declare(strict_types=1);
 
 namespace App\Domain\ExerciseTemplate\Requests;
 
-use App\Domain\ExerciseTemplate\Enums\ExerciseParameterUnit;
 use App\Support\Requests\FormRequest;
-use Illuminate\Validation\Rule;
 
 final class StoreExerciseTemplateRequest extends FormRequest
 {
@@ -31,10 +29,5 @@ final class StoreExerciseTemplateRequest extends FormRequest
             'instructions' => ['nullable', 'string'],
             'is_active' => ['sometimes', 'boolean'],
         ];
-    }
-
-    private function unitValues(): array
-    {
-        return array_map(static fn(ExerciseParameterUnit $unit) => $unit->value, ExerciseParameterUnit::cases());
     }
 }

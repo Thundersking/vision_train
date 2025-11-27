@@ -19,8 +19,6 @@ final class ExerciseTemplateDetailResource extends JsonResource
             'is_active' => $this->is_active,
             'duration_seconds' => $this->duration_seconds,
             'instructions' => $this->instructions,
-            'parameters' => ExerciseTemplateParameterResource::collection($this->whenLoaded('parameters')),
-            'steps' => ExerciseTemplateStepResource::collection($this->whenLoaded('steps')),
             'type' => $this->whenLoaded('type', function () {
                 return [
                     'id' => $this->type->id,

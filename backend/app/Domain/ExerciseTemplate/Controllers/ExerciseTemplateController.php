@@ -8,13 +8,11 @@ use App\Domain\ExerciseTemplate\Actions\CreateExerciseTemplateAction;
 use App\Domain\ExerciseTemplate\Actions\DeleteExerciseTemplateAction;
 use App\Domain\ExerciseTemplate\Actions\UpdateExerciseTemplateAction;
 use App\Domain\ExerciseTemplate\Repositories\ExerciseTemplateRepository;
-use App\Domain\ExerciseTemplate\Repositories\ExerciseTemplateStepRepository;
 use App\Domain\ExerciseTemplate\Requests\ExerciseTemplateSearchRequest;
 use App\Domain\ExerciseTemplate\Requests\StoreExerciseTemplateRequest;
 use App\Domain\ExerciseTemplate\Requests\UpdateExerciseTemplateRequest;
 use App\Domain\ExerciseTemplate\Resources\ExerciseTemplateDetailResource;
 use App\Domain\ExerciseTemplate\Resources\ExerciseTemplateListResource;
-use App\Domain\ExerciseTemplate\Resources\ExerciseTemplateStepResource;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\JsonResponse;
@@ -28,7 +26,6 @@ final class ExerciseTemplateController extends Controller
 
     public function __construct(
         private readonly ExerciseTemplateRepository $repository,
-        private readonly ExerciseTemplateStepRepository $stepRepository,
     )
     {
     }
@@ -49,19 +46,6 @@ final class ExerciseTemplateController extends Controller
         }
 
         return new ExerciseTemplateDetailResource($template);
-    }
-
-    public function steps(string $uuid): AnonymousResourceCollection
-    {
-        $template = $this->repository->findByUuid($uuid);
-
-        if (!$template) {
-            throw new ModelNotFoundException();
-        }
-
-        $steps = $this->stepRepository->listByTemplateId((int) $template->id);
-
-        return ExerciseTemplateStepResource::collection($steps);
     }
 
     /**
