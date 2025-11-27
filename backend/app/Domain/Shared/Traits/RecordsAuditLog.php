@@ -77,6 +77,11 @@ trait RecordsAuditLog
             return $entity->id;
         }
 
+        $userOrganizationId = auth()->user()?->organization_id;
+        if ($userOrganizationId) {
+            return (int) $userOrganizationId;
+        }
+
         return null;
     }
 

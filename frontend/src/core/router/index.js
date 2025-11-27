@@ -178,6 +178,82 @@ const routes = [
         }
     },
 
+    // Exercise Types
+    {
+        path: '/exercise-types',
+        name: 'exercise-types',
+        component: () => import('@/domains/exercise-types/views/Index.vue'),
+        meta: {
+            layout: 'dashboard',
+            title: 'Типы упражнений'
+        }
+    },
+    {
+        path: '/exercise-types/create',
+        name: 'exercise-type-create',
+        component: () => import('@/domains/exercise-types/views/Create.vue'),
+        meta: {
+            layout: 'dashboard',
+            title: 'Создание типа упражнения'
+        }
+    },
+    {
+        path: '/exercise-types/:uuid',
+        name: 'exercise-type-show',
+        component: () => import('@/domains/exercise-types/views/Show.vue'),
+        meta: {
+            layout: 'dashboard',
+            title: 'Просмотр типа упражнения'
+        }
+    },
+    {
+        path: '/exercise-types/:uuid/update',
+        name: 'exercise-type-update',
+        component: () => import('@/domains/exercise-types/views/Update.vue'),
+        meta: {
+            layout: 'dashboard',
+            title: 'Редактирование типа упражнения'
+        }
+    },
+
+    // Exercise Templates
+    {
+        path: '/exercise-templates',
+        name: 'exercise-templates',
+        component: () => import('@/domains/exercise-templates/views/Index.vue'),
+        meta: {
+            layout: 'dashboard',
+            title: 'Шаблоны упражнений'
+        }
+    },
+    {
+        path: '/exercise-templates/create',
+        name: 'exercise-template-create',
+        component: () => import('@/domains/exercise-templates/views/Create.vue'),
+        meta: {
+            layout: 'dashboard',
+            title: 'Создание шаблона'
+        }
+    },
+    {
+        path: '/exercise-templates/:uuid',
+        name: 'exercise-template-show',
+        component: () => import('@/domains/exercise-templates/views/Show.vue'),
+        meta: {
+            layout: 'dashboard',
+            title: 'Просмотр шаблона'
+        }
+    },
+    {
+        path: '/exercise-templates/:uuid/update',
+        name: 'exercise-template-update',
+        component: () => import('@/domains/exercise-templates/views/Update.vue'),
+        meta: {
+            layout: 'dashboard',
+            title: 'Редактирование шаблона'
+        }
+    },
+
     {
         path: '/reports',
         component: () => import('@/domains/reports/views/Index.vue'),

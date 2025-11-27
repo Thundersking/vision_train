@@ -37,7 +37,7 @@ export class PatientExamination extends BaseModel {
         required: helpers.withMessage('Результаты обязательны', required),
         maxLength: helpers.withMessage('Минимум 1 символов', maxLength(500))
       },
-      recommendatioфы вns: {
+      recommendations: {
         maxLength: helpers.withMessage('Максимум 2000 символов', maxLength(2000))
       }
     }

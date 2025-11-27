@@ -49,6 +49,18 @@ export const useNavigationStore = defineStore('navigation', () => {
       route: '/organization'
     },
     {
+      id: 'exercise-types',
+      title: 'Типы упражнений',
+      icon: 'exercise-types',
+      route: '/exercise-types'
+    },
+    {
+      id: 'exercise-templates',
+      title: 'Шаблоны упражнений',
+      icon: 'exercise-templates',
+      route: '/exercise-templates'
+    },
+    {
       id: 'reports',
       title: 'Отчеты',
       icon: 'reports',
@@ -76,7 +88,11 @@ export const useNavigationStore = defineStore('navigation', () => {
     },
     {
       title: 'УПРАВЛЕНИЕ',
-      items: ['users', 'departments', 'organization', 'reports']
+      items: ['users', 'departments', 'organization']
+    },
+    {
+      title: 'КАТАЛОГИ',
+      items: ['exercise-types', 'exercise-templates', 'reports']
     }
   ])
 
@@ -136,6 +152,8 @@ export const useNavigationStore = defineStore('navigation', () => {
       users: 'pi-user',
       departments: 'pi-building',
       organization: 'pi-briefcase',
+      'exercise-types': 'pi-list',
+      'exercise-templates': 'pi-clone',
       reports: 'pi-file-text'
     }
     return iconMap[menuId] || 'pi-circle'

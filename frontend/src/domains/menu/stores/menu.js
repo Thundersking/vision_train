@@ -106,6 +106,18 @@ export const useMenuStore = defineStore('menu', {
           ]
         },
         {
+          key: "exercise-types",
+          label: "Типы упражнений",
+          icon: "pi pi-list",
+          path: "/exercise-types"
+        },
+        {
+          key: "exercise-templates",
+          label: "Шаблоны упражнений",
+          icon: "pi pi-clone",
+          path: "/exercise-templates"
+        },
+        {
           key: "reports",
           label: "Отчеты",
           icon: "pi pi-chart-bar",
