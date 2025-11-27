@@ -14,22 +14,11 @@ final class ExerciseTemplateParameterRepository extends BaseRepository
         return ExerciseTemplateParameter::class;
     }
 
-    public function sync(int $templateId, array $parameters): void
+    public function listByTemplateId(int $templateId)
     {
-        $this->newQuery()->where('exercise_template_id', $templateId)->delete();
-
-        if (empty($parameters)) {
-            return;
-        }
-
-        foreach ($parameters as $parameter) {
-            $this->create([
-                'exercise_template_id' => $templateId,
-                'label' => $parameter['label'] ?? null,
-                'key' => $parameter['key'] ?? null,
-                'target_value' => $parameter['target_value'] ?? null,
-                'unit' => $parameter['unit'] ?? null,
-            ]);
-        }
+        return $this->newQuery()
+            ->where('exercise_template_id', $templateId)
+            ->orderBy('id')
+            ->get();
     }
 }

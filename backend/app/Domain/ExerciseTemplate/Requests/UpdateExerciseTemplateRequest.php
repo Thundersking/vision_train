@@ -44,16 +44,6 @@ final class UpdateExerciseTemplateRequest extends FormRequest
             'difficulty' => ['nullable', 'string', 'max:100'],
             'duration_seconds' => ['nullable', 'integer', 'min:1'],
             'instructions' => ['nullable', 'string'],
-            'parameters' => ['nullable', 'array'],
-            'parameters.*.label' => ['nullable', 'string', 'max:255'],
-            'parameters.*.target_value' => ['nullable', 'string', 'max:255'],
-            'parameters.*.unit' => ['nullable', 'string', Rule::in($this->unitValues())],
-            'steps' => ['sometimes', 'array', 'min:1'],
-            'steps.*.title' => ['required_with:steps', 'string', 'max:255'],
-            'steps.*.duration' => ['required_with:steps', 'integer', 'min:1'],
-            'steps.*.description' => ['nullable', 'string'],
-            'steps.*.hint' => ['nullable', 'string'],
-            'extra_payload' => ['nullable', 'array'],
             'is_active' => ['sometimes', 'boolean'],
         ];
     }

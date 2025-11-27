@@ -1,35 +1,28 @@
 <script setup>
-import { computed, onMounted, ref } from 'vue'
+import { onMounted, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { useVuelidate } from '@vuelidate/core'
 import { ExerciseTemplate } from '@/domains/exercise-templates/models/ExerciseTemplate.js'
 import { useExerciseTemplateStore } from '@/domains/exercise-templates/stores/exerciseTemplate.js'
 import { useExerciseTypeStore } from '@/domains/exercise-types/stores/exerciseType.js'
-import { DIFFICULTY_OPTIONS } from '@/domains/exercise-templates/constants.js'
-import ExerciseTemplatePayloadEditor from '@/domains/exercise-templates/components/ExerciseTemplatePayloadEditor.vue'
-import { useReferenceStore } from '@/common/stores/reference.js'
+import ExerciseTemplateDetailsForm from '@/domains/exercise-templates/components/ExerciseTemplateDetailsForm.vue'
 
 const router = useRouter()
 const templateStore = useExerciseTemplateStore()
 const exerciseTypeStore = useExerciseTypeStore()
-const referenceStore = useReferenceStore()
 
 const form = ref(new ExerciseTemplate())
 const formId = 'exercise-template-form-create'
 const isSubmitting = ref(false)
 const loadingTypes = ref(false)
 const typeOptions = ref([])
-const unitOptions = computed(() => referenceStore.units)
 
 const $v = useVuelidate(ExerciseTemplate.validationRules(), form)
 
 const fetchLookups = async () => {
   loadingTypes.value = true
   try {
-    const [types] = await Promise.all([
-      exerciseTypeStore.allList(),
-      referenceStore.fetchUnits()
-    ])
+    const types = await exerciseTypeStore.allList()
     typeOptions.value = types
   } finally {
     loadingTypes.value = false
@@ -79,59 +72,10 @@ const handleSuccess = () => {
         :validator="$v"
         @success="handleSuccess"
       >
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <FormSelect
-            v-model="form"
-            name="exercise_type_id"
-            label="Тип упражнения"
-            :options="typeOptions"
-            optionLabel="name"
-            optionValue="id"
-            placeholder="Выберите тип"
-            required
-            :validation="$v"
-          />
-
-          <FormInput
-            v-model="form"
-            name="title"
-            label="Название"
-            required
-            placeholder="Например, Прогрев сетки"
-            :validation="$v"
-          />
-
-          <FormSelect
-            v-model="form"
-            name="difficulty"
-            label="Сложность"
-            :options="DIFFICULTY_OPTIONS"
-            optionLabel="label"
-            optionValue="value"
-            placeholder="Выберите сложность"
-          />
-
-          <FormSwitch
-            v-model="form"
-            name="is_active"
-            label="Активен"
-          />
-        </div>
-
-        <div class="grid grid-cols-1 gap-6 mt-4">
-          <FormTextarea
-            v-model="form"
-            name="short_description"
-            label="Краткое описание"
-            placeholder="Что делает этот сценарий"
-          />
-        </div>
-
-        <ExerciseTemplatePayloadEditor
+        <ExerciseTemplateDetailsForm
           v-model="form"
           :validation="$v"
-          :unit-options="unitOptions"
-          class="mt-6"
+          :type-options="typeOptions"
         />
       </BaseForm>
     </Card>

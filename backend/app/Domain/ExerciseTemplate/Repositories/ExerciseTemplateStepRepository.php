@@ -15,6 +15,14 @@ final class ExerciseTemplateStepRepository extends BaseRepository
         return ExerciseTemplateStep::class;
     }
 
+    public function listByTemplateId(int $templateId)
+    {
+        return $this->newQuery()
+            ->where('exercise_template_id', $templateId)
+            ->orderBy('step_order')
+            ->get();
+    }
+
     public function sync(int $templateId, array $steps): void
     {
         $this->newQuery()->where('exercise_template_id', $templateId)->delete();

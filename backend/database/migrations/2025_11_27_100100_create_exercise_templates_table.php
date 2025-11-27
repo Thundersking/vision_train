@@ -19,7 +19,6 @@ return new class extends Migration
             $table->string('difficulty')->nullable();
             $table->unsignedInteger('duration_seconds')->default(0);
             $table->text('instructions')->nullable();
-            $table->jsonb('extra_payload_json')->nullable();
             $table->boolean('is_active')->default(true);
             $table->timestamps();
 
@@ -58,6 +57,7 @@ return new class extends Migration
 
         Schema::create('exercise_template_parameters', function (Blueprint $table) {
             $table->id();
+            $table->uuid()->default(DB::raw('uuid_generate_v4()'))->unique();
             $table->unsignedBigInteger('exercise_template_id');
             $table->string('label')->nullable();
             $table->string('key')->nullable();

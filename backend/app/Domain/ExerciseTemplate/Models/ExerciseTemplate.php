@@ -28,14 +28,12 @@ class ExerciseTemplate extends Model
         'difficulty',
         'duration_seconds',
         'instructions',
-        'extra_payload_json',
         'is_active',
     ];
 
     protected function casts(): array
     {
         return [
-            'extra_payload_json' => 'array',
             'duration_seconds' => 'integer',
             'is_active' => 'boolean',
         ];

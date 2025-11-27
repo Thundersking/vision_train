@@ -74,15 +74,6 @@ trait NormalizesExerciseTemplatePayload
         return $normalized;
     }
 
-    private function normalizeExtraPayload(mixed $payload): ?array
-    {
-        if (!is_array($payload) || $payload === []) {
-            return null;
-        }
-
-        return $payload;
-    }
-
     private function calculateDuration(?array $steps, ?int $fallback = null): ?int
     {
         if ($steps) {

@@ -236,21 +236,21 @@ const routes = [
         }
     },
     {
+        path: '/exercise-templates/:uuid/edit',
+        name: 'exercise-template-update',
+        component: () => import('@/domains/exercise-templates/views/Update.vue'),
+        meta: {
+            layout: 'dashboard',
+            title: 'Редактирование шаблона'
+        }
+    },
+    {
         path: '/exercise-templates/:uuid',
         name: 'exercise-template-show',
         component: () => import('@/domains/exercise-templates/views/Show.vue'),
         meta: {
             layout: 'dashboard',
             title: 'Просмотр шаблона'
-        }
-    },
-    {
-        path: '/exercise-templates/:uuid/update',
-        name: 'exercise-template-update',
-        component: () => import('@/domains/exercise-templates/views/Update.vue'),
-        meta: {
-            layout: 'dashboard',
-            title: 'Редактирование шаблона'
         }
     },
 
