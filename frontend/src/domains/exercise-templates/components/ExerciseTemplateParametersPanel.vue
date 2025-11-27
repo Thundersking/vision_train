@@ -26,6 +26,7 @@ const loading = ref(false)
 const loaded = ref(false)
 const dialogVisible = ref(false)
 const editingParameter = ref(null)
+const submitting = ref(false)
 const formId = 'exercise-template-parameter-form'
 const form = ref(new ExerciseTemplateParameter())
 const $v = useVuelidate(ExerciseTemplateParameter.validationRules(), form)
@@ -103,13 +104,18 @@ const handleParameterSubmit = async () => {
     throw new Error('Заполните обязательные поля')
   }
 
-  const payload = form.value.toApiFormat()
+  submitting.value = true
+  try {
+    const payload = form.value.toApiFormat()
 
-  if (editingParameter.value?.uuid) {
-    return store.updateParameter(editingParameter.value.uuid, payload, props.templateUuid)
+    if (editingParameter.value?.uuid) {
+      return await store.updateParameter(editingParameter.value.uuid, payload, props.templateUuid)
+    }
+
+    return await store.createParameter(props.templateUuid, payload)
+  } finally {
+    submitting.value = false
   }
-
-  return store.createParameter(props.templateUuid, payload)
 }
 
 const handleParameterSuccess = async () => {
@@ -151,44 +157,45 @@ watch(() => props.templateUuid, (uuid, prev) => {
 </script>
 
 <template>
-  <div class="space-y-4">
-    <div class="flex justify-end">
-      <Button
-          label="Добавить параметр"
-          icon="pi pi-plus"
-          :disabled="!templateUuid"
-          @click="openCreateDialog"
-      />
-    </div>
-
-    <div v-if="loaded && hasParameters" class="space-y-3">
-      <div
-          v-for="parameter in parameters"
-          :key="parameter.uuid || parameter.id || parameter.key"
-          class="border border-slate-200 dark:border-slate-700 rounded-lg p-4 flex items-start justify-between gap-4"
-      >
-        <div>
-          <p class="text-sm text-slate-500">{{ parameter.label || parameter.key || 'Параметр' }}</p>
-          <p class="font-medium text-slate-900 dark:text-slate-50">{{ formatValue(parameter) }}</p>
-        </div>
+  <div>
+    <div class="space-y-4">
+      <div class="flex justify-end">
         <Button
-            icon="pi pi-pencil"
-            text
-            rounded
-            severity="secondary"
-            @click="openEditDialog(parameter)"
+            label="Добавить параметр"
+            icon="pi pi-plus"
+            :disabled="!templateUuid"
+            @click="openCreateDialog"
         />
       </div>
-    </div>
-    <div v-else-if="loaded" class="text-center text-slate-400 py-6">
-      Целевые параметры не заданы
-    </div>
-    <div v-else class="text-center text-slate-400 py-6">
-      {{ active ? 'Загрузка параметров...' : 'Выберите вкладку, чтобы загрузить данные' }}
-    </div>
-  </div>
 
-  <Dialog
+      <div v-if="loaded && hasParameters" class="space-y-3">
+        <div
+            v-for="parameter in parameters"
+            :key="parameter.uuid || parameter.id || parameter.key"
+            class="border border-slate-200 dark:border-slate-700 rounded-lg p-4 flex items-start justify-between gap-4"
+        >
+          <div>
+            <p class="text-sm text-slate-500">{{ parameter.label || parameter.key || 'Параметр' }}</p>
+            <p class="font-medium text-slate-900 dark:text-slate-50">{{ formatValue(parameter) }}</p>
+          </div>
+          <Button
+              icon="pi pi-pencil"
+              text
+              rounded
+              severity="secondary"
+              @click="openEditDialog(parameter)"
+          />
+        </div>
+      </div>
+      <div v-else-if="loaded" class="text-center text-slate-400 py-6">
+        Целевые параметры не заданы
+      </div>
+      <div v-else class="text-center text-slate-400 py-6">
+        {{ active ? 'Загрузка параметров...' : 'Выберите вкладку, чтобы загрузить данные' }}
+      </div>
+    </div>
+
+    <Dialog
       v-model:visible="dialogVisible"
       modal
       :header="dialogTitle"
@@ -230,5 +237,25 @@ watch(() => props.templateUuid, (uuid, prev) => {
           :loading="referenceStore.unitsLoading"
       />
     </BaseForm>
-  </Dialog>
+
+    <template #footer>
+      <div class="flex justify-end gap-3">
+        <Button
+          type="button"
+          label="Отмена"
+          severity="secondary"
+          :disabled="submitting"
+          @click="closeDialog"
+        />
+        <Button
+          type="submit"
+          :form="formId"
+          label="Сохранить"
+          icon="pi pi-check"
+          :loading="submitting"
+        />
+      </div>
+    </template>
+    </Dialog>
+  </div>
 </template>
