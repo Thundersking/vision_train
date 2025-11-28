@@ -117,12 +117,6 @@ export const useMenuStore = defineStore('menu', {
           icon: "pi pi-clone",
           path: "/exercise-templates"
         },
-        {
-          key: "reports",
-          label: "Отчеты",
-          icon: "pi pi-chart-bar",
-          path: "/reports"
-        }
       ]
       
       this.setMenuItems(testMenuItems)

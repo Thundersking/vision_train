@@ -38,6 +38,7 @@ import FieldDisplay from "@/common/components/ui/FieldDisplay.vue";
 import FormSwitch from "@/common/components/form/FormSwitch.vue";
 import FormDateTime from "@/common/components/form/FormDateTime.vue";
 import Dialog from "primevue/dialog";
+import AutoComplete from "primevue/autocomplete";
 
 
 const MyCustomPreset = definePreset(Lara, {
@@ -182,6 +183,7 @@ app.component('FormDateTime', FormDateTime);
 // Компоненты PrimeVue
 app.component('Button', Button);
 app.component('Select', Select);
+app.component('AutoComplete', AutoComplete);
 app.component('Dialog', Dialog);
 app.component('DatePicker', DatePicker);
 app.component('Password', Password);

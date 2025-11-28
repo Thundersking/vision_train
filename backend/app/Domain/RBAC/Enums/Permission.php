@@ -51,10 +51,6 @@ enum Permission: string
     case PROGRAMS_UPDATE = 'programs.update';
     case PROGRAMS_DELETE = 'programs.delete';
 
-    // Отчеты
-    case REPORTS_VIEW = 'reports.view';
-    case REPORTS_EXPORT = 'reports.export';
-
     // Настройки организации
     case SETTINGS_VIEW = 'settings.view';
     case SETTINGS_UPDATE = 'settings.update';
@@ -122,7 +118,6 @@ enum Permission: string
                 self::PATIENTS_RESTORE->value,
                 self::EXERCISES_VIEW->value,
                 self::PROGRAMS_VIEW->value,
-                self::REPORTS_VIEW->value,
                 self::SETTINGS_VIEW->value,
             ],
 

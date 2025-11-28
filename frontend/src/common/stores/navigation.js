@@ -8,21 +8,9 @@ export const useNavigationStore = defineStore('navigation', () => {
   const menuItems = ref([
     {
       id: 'dashboard',
-      title: 'Dashboard',
+      title: 'Дашборд',
       icon: 'dashboard',
       route: '/dashboard',
-      children: [
-        {
-          id: 'analytics',
-          title: 'Аналитика',
-          route: '/dashboard/analytics'
-        },
-        {
-          id: 'overview',
-          title: 'Обзор',
-          route: '/dashboard/overview'
-        }
-      ]
     },
     {
       id: 'patients',
@@ -55,23 +43,11 @@ export const useNavigationStore = defineStore('navigation', () => {
       route: '/exercise-templates'
     },
     {
-      id: 'reports',
-      title: 'Отчеты',
-      icon: 'reports',
-      route: '/reports',
-      children: [
-        {
-          id: 'medical-reports',
-          title: 'Медицинские отчеты',
-          route: '/reports/medical'
-        },
-        {
-          id: 'statistical-reports',
-          title: 'Статистические отчеты',
-          route: '/reports/statistics'
-        }
-      ]
-    }
+      id: 'exercises',
+      title: 'Упражнения',
+      icon: 'exercises',
+      route: '/exercises'
+    },
   ])
 
   // Группы меню
@@ -86,7 +62,7 @@ export const useNavigationStore = defineStore('navigation', () => {
     },
     {
       title: 'КАТАЛОГИ',
-      items: ['exercise-templates', 'reports']
+      items: ['exercise-templates', 'exercises']
     }
   ])
 
@@ -147,7 +123,7 @@ export const useNavigationStore = defineStore('navigation', () => {
       departments: 'pi-building',
       organization: 'pi-briefcase',
       'exercise-templates': 'pi-clone',
-      reports: 'pi-file-text'
+      'exercises': 'pi-heart',
     }
     return iconMap[menuId] || 'pi-circle'
   }

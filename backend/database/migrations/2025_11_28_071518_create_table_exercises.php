@@ -2,6 +2,7 @@
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
@@ -13,6 +14,7 @@ return new class extends Migration
     {
         Schema::create('exercises', function (Blueprint $table) {
             $table->id()->comment('Уникальный ID выполнения');
+            $table->uuid()->default(DB::raw('uuid_generate_v4()'))->unique();
             $table->foreignId('patient_id')->constrained()->cascadeOnDelete()->comment('Пациент');
             $table->string('exercise_type')->comment('Тип: 2D/3D');
             $table->unsignedBigInteger('exercise_template_id')->nullable()->comment('ID шаблона (nullable)');

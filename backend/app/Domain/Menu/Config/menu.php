@@ -45,13 +45,6 @@ return [
         'permission' => Permission::PROGRAMS_VIEW->value,
     ],
 
-    'reports' => [
-        'label' => 'Отчеты',
-        'icon' => 'pi pi-chart-bar',
-        'path' => '/reports',
-        'permission' => Permission::REPORTS_VIEW->value,
-    ],
-
     'organization' => [
         'label' => 'Организация',
         'icon' => 'pi pi-building-columns',

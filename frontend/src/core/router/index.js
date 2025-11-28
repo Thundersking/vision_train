@@ -25,20 +25,11 @@ const routes = [
     },
     {
         path: '/dashboard',
-        component: () => import('@/domains/dashboard/views/Overview.vue'),
-        meta: {
-            layout: 'dashboard',
-            requiresAuth: true,
-            title: 'Dashboard'
-        }
-    },
-    {
-        path: '/dashboard/analytics',
-        component: () => import('@/domains/dashboard/views/Analytics.vue'),
+        component: () => import('@/domains/dashboard/views/Show.vue'),
         meta: {
             layout: 'dashboard',
             // requiresAuth: true,
-            title: 'Аналитика'
+            title: 'Dashboard'
         }
     },
     {
@@ -216,33 +207,44 @@ const routes = [
         }
     },
 
+    // Exercises
     {
-        path: '/reports',
-        component: () => import('@/domains/reports/views/Index.vue'),
+        path: '/exercises',
+        name: 'exercises',
+        component: () => import('@/domains/exercises/views/Index.vue'),
         meta: {
             layout: 'dashboard',
-            // requiresAuth: true,
-            title: 'Отчеты'
+            title: 'Упражнения'
         }
     },
     {
-        path: '/reports/medical',
-        component: () => import('@/domains/reports/views/Medical.vue'),
+        path: '/exercises/create',
+        name: 'exercise-create',
+        component: () => import('@/domains/exercises/views/Create.vue'),
         meta: {
             layout: 'dashboard',
-            // requiresAuth: true,
-            title: 'Медицинские отчеты'
+            title: 'Создание упражнения'
         }
     },
     {
-        path: '/reports/statistics',
-        component: () => import('@/domains/reports/views/Statistics.vue'),
+        path: '/exercises/:uuid',
+        name: 'exercise-show',
+        component: () => import('@/domains/exercises/views/Show.vue'),
         meta: {
             layout: 'dashboard',
-            // requiresAuth: true,
-            title: 'Статистические отчеты'
+            title: 'Детали упражнения'
         }
     },
+    {
+        path: '/exercises/:uuid/edit',
+        name: 'exercise-update',
+        component: () => import('@/domains/exercises/views/Update.vue'),
+        meta: {
+            layout: 'dashboard',
+            title: 'Редактирование упражнения'
+        }
+    },
+
     {
         path: '/profile',
         component: () => import('@/domains/auth/views/Profile.vue'),
