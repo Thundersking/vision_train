@@ -29,11 +29,12 @@ const is3DType = computed(() => {
 <template>
   <div class="space-y-6">
     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-      <FormAutocomplete
+      <FormAutocompleteDisplay
         v-model="form"
         name="patient_id"
         label="Пациент"
         :store="patientStore"
+        display-field="patient_name"
         optionLabel="full_name"
         optionValue="id"
         placeholder="Начните вводить имя пациента..."

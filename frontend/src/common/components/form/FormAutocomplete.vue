@@ -133,6 +133,8 @@ const handleSearch = (event) => {
   search(event)
 }
 
+const emit = defineEmits(['item-selected'])
+
 const handleSelect = (event) => {
   const selected = event.value
   selectedItem.value = selected
@@ -143,6 +145,12 @@ const handleSelect = (event) => {
     : selected
   
   props.modelValue[props.name] = value
+  
+  // Эмитим событие с выбранным объектом для родительских компонентов
+  if (typeof selected === 'object') {
+    emit('item-selected', selected)
+  }
+  
   clearBackendError()
   props.validation?.[props.name]?.$touch?.()
 }

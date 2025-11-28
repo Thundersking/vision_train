@@ -6,6 +6,7 @@ export class Exercise extends BaseModel {
         super(data)
 
         this.patient_id = data.patient_id ?? null
+        this.patient_name = data.patient_name ?? (data.patient?.full_name ?? null)
         this.exercise_template_id = data.exercise_template_id ?? null
         this.exercise_type = data.exercise_type ?? '2d'
         
@@ -37,6 +38,7 @@ export class Exercise extends BaseModel {
         delete data.updated_at
         delete data.id
         delete data.uuid
+        delete data.patient_name // patient_name не отправляется на бэкенд, только для отображения
         return data
     }
 
