@@ -3,7 +3,6 @@ import {onMounted, ref} from 'vue'
 import {useRoute, useRouter} from 'vue-router'
 import {useVuelidate} from '@vuelidate/core'
 import {useExerciseStore} from '@/domains/exercises/stores/exercise.js'
-import {usePatientStore} from '@/domains/patients/stores/patient.js'
 import {useExerciseTemplateStore} from '@/domains/exercise-templates/stores/exerciseTemplate.js'
 import {Exercise} from '@/domains/exercises/models/Exercise.js'
 import {useErrorHandler} from '@/common/composables/useErrorHandler.js'
@@ -12,7 +11,6 @@ import ExerciseDetailsForm from '@/domains/exercises/components/ExerciseDetailsF
 const route = useRoute()
 const router = useRouter()
 const exerciseStore = useExerciseStore()
-const patientStore = usePatientStore()
 const templateStore = useExerciseTemplateStore()
 const {handleError} = useErrorHandler()
 
@@ -20,28 +18,15 @@ const form = ref(new Exercise())
 const formId = 'exercise-form-update'
 const isSubmitting = ref(false)
 const loading = ref(false)
-const loadingPatients = ref(false)
-const loadingTemplates = ref(false)
-const patientOptions = ref([])
 const templateOptions = ref([])
 
 const $v = useVuelidate(Exercise.validationRules(), form)
 
-const fetchLookups = async () => {
-  loadingPatients.value = true
-  loadingTemplates.value = true
+const fetchTemplates = async () => {
   try {
-    const [patients, templates] = await Promise.all([
-      patientStore.index({per_page: 100}),
-      templateStore.index({per_page: 100})
-    ])
-    patientOptions.value = patients?.data ?? []
-    templateOptions.value = templates?.data ?? []
+    templateOptions.value = await templateStore.allList()
   } catch (err) {
-    handleError(err, 'Ошибка при загрузке справочников')
-  } finally {
-    loadingPatients.value = false
-    loadingTemplates.value = false
+    handleError(err, 'Ошибка при загрузке шаблонов')
   }
 }
 
@@ -62,7 +47,7 @@ const loadExercise = async () => {
 }
 
 onMounted(async () => {
-  await Promise.all([fetchLookups(), loadExercise()])
+  await Promise.all([fetchTemplates(), loadExercise()])
 })
 
 const handleFormSubmit = async () => {
@@ -94,14 +79,14 @@ const handleSuccess = () => {
             label="Сохранить"
             icon="pi pi-check"
             :loading="isSubmitting"
-            :disabled="loading || loadingPatients || loadingTemplates"
+            :disabled="loading"
         />
       </template>
     </TitleBlock>
 
-    <Card :loading="loading || loadingPatients || loadingTemplates">
+    <Card :loading="loading">
       <BaseForm
-          v-if="!loading && !loadingPatients && !loadingTemplates"
+          v-if="!loading"
           :id="formId"
           :submit="handleFormSubmit"
           :validator="$v"
@@ -110,7 +95,6 @@ const handleSuccess = () => {
         <ExerciseDetailsForm
             v-model="form"
             :validation="$v"
-            :patient-options="patientOptions"
             :template-options="templateOptions"
         />
       </BaseForm>

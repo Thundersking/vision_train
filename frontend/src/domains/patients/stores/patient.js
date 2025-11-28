@@ -95,6 +95,21 @@ export const usePatientStore = defineStore('patients', {
       } finally {
         this.loading = false
       }
+    },
+
+    /**
+     * Поиск пациентов для автокомплита
+     * @param {string} query - поисковый запрос
+     * @returns {Promise<Array>} - массив объектов {id, full_name}
+     */
+    async search(query) {
+      try {
+        const results = await patientService.search(query)
+        return results
+      } catch (error) {
+        this.error = error.response?.data?.message || 'Ошибка при поиске пациентов'
+        throw error
+      }
     }
   }
 })

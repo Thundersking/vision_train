@@ -1,15 +1,12 @@
 <script setup>
 import {computed} from 'vue'
+import {usePatientStore} from '@/domains/patients/stores/patient.js'
 import {EXERCISE_TYPE_OPTIONS, VERTICAL_AREA_OPTIONS, HORIZONTAL_AREA_OPTIONS, DISTANCE_AREA_OPTIONS, SPEED_OPTIONS} from '@/domains/exercises/constants/constants.js'
 
 const props = defineProps({
   validation: {
     type: Object,
     default: null
-  },
-  patientOptions: {
-    type: Array,
-    default: () => []
   },
   templateOptions: {
     type: Array,
@@ -22,6 +19,8 @@ const form = defineModel({
   required: true
 })
 
+const patientStore = usePatientStore()
+
 const is3DType = computed(() => {
   return form.value.exercise_type === '3d'
 })
@@ -30,14 +29,14 @@ const is3DType = computed(() => {
 <template>
   <div class="space-y-6">
     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-      <FormSelect
+      <FormAutocomplete
         v-model="form"
         name="patient_id"
         label="Пациент"
-        :options="patientOptions"
+        :store="patientStore"
         optionLabel="full_name"
         optionValue="id"
-        placeholder="Выберите пациента"
+        placeholder="Начните вводить имя пациента..."
         required
         :validation="validation"
       />

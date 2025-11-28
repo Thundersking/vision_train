@@ -91,6 +91,24 @@ export const useExerciseTemplateStore = defineStore('exercise-templates', {
             } finally {
                 this.loading = false
             }
+        },
+
+        /**
+         * Получить короткий список шаблонов (id, title) для выпадающих списков
+         * @returns {Promise<Array>} - массив объектов {id, title}
+         */
+        async allList() {
+            this.loading = true
+            this.error = null
+            try {
+                const response = await exerciseTemplateService.allList()
+                return response.data?.data ?? []
+            } catch (error) {
+                this.error = error.response?.data?.message || 'Ошибка при загрузке списка шаблонов'
+                throw error
+            } finally {
+                this.loading = false
+            }
         }
     }
 })

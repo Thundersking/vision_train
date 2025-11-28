@@ -158,7 +158,7 @@ abstract class BaseRepository
 
             return [
                 'id' => $item->id ?? null,
-                'uuid' => $item->uuid,
+                'uuid' => $item->uuid ?? null,
                 'name' => data_get($item, $nameField, $item->name ?? null),
             ];
         })->filter(fn($row) => !empty($row['uuid']))->values();

@@ -33,6 +33,27 @@ final class PatientController extends Controller
         return PatientListResource::collection($paginator);
     }
 
+    /**
+     * Поиск пациентов для автокомплита (возвращает только id и full_name)
+     */
+    public function search(PatientSearchRequest $request): JsonResponse
+    {
+        $filters = $request->validated();
+        
+        $patients = $this->repository->get($filters)
+            ->take(20)
+            ->map(function ($patient) {
+                return [
+                    'id' => $patient->id,
+                    'full_name' => $patient->name,
+                ];
+            });
+
+        return response()->json([
+            'data' => $patients,
+        ]);
+    }
+
     public function show(string $uuid): PatientDetailResource
     {
         $patient = $this->repository->findWithRelations($uuid, ['doctor', 'organization']);

@@ -37,6 +37,16 @@ final class ExerciseTemplateController extends Controller
         return ExerciseTemplateListResource::collection($paginator);
     }
 
+    public function allList(): JsonResponse
+    {
+        $list = $this->repository->allList('title');
+
+        return response()->json([
+            'data' => $list,
+        ]);
+    }
+
+
     public function show(string $uuid): ExerciseTemplateDetailResource
     {
         $template = $this->repository->findWithRelations($uuid, ['type']);
