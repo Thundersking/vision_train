@@ -19,6 +19,14 @@ final class ExerciseTemplateDetailResource extends JsonResource
             'is_active' => $this->is_active,
             'duration_seconds' => $this->duration_seconds,
             'instructions' => $this->instructions,
+            // Настройки 3D упражнения (nullable, только для 3D типов)
+            'ball_count' => $this->ball_count,
+            'ball_size' => $this->ball_size,
+            'target_accuracy_percent' => $this->target_accuracy_percent,
+            'vertical_area' => $this->vertical_area,
+            'horizontal_area' => $this->horizontal_area,
+            'distance_area' => $this->distance_area,
+            'speed' => $this->speed,
             'type' => $this->whenLoaded('type', function () {
                 return [
                     'id' => $this->type->id,

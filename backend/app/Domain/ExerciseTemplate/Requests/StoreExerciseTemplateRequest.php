@@ -18,13 +18,14 @@ final class StoreExerciseTemplateRequest extends FormRequest
             'duration_seconds' => ['nullable', 'integer', 'min:1'],
             'instructions' => ['nullable', 'string'],
 
-            'ball_count' => ['required', 'integer', 'between:1,50'],
-            'ball_size' => ['required', 'integer', 'between:1,10'],
-            'target_accuracy_percent' => ['required', 'integer', 'between:1,100'],
-            'vertical_area' => ['required', 'string', 'max:255'],
-            'horizontal_area' => ['required', 'string', 'max:255'],
-            'distance_area' => ['required', 'string', 'max:255'],
-            'speed' => ['required', 'string', 'max:255'],
+            // Настройки 3D упражнения (nullable, только для 3D типов)
+            'ball_count' => ['nullable', 'integer', 'between:1,50'],
+            'ball_size' => ['nullable', 'integer', 'between:1,10'],
+            'target_accuracy_percent' => ['nullable', 'integer', 'between:1,100'],
+            'vertical_area' => ['nullable', 'string', 'in:full,top,bottom'],
+            'horizontal_area' => ['nullable', 'string', 'in:full,left,right'],
+            'distance_area' => ['nullable', 'string', 'in:full,near,medium,far'],
+            'speed' => ['nullable', 'string', 'in:slow,medium,fast'],
 
             'is_active' => ['sometimes', 'boolean'],
         ];

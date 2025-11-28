@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Domain\ExerciseTemplate\Models;
 
-use App\Domain\ExerciseType\Models\ExerciseType;
 use App\Domain\Organization\Models\Organization;
 use App\Domain\Shared\Traits\RecordsAuditLog;
 use App\Support\Multitenancy\Traits\HasOrganization;
@@ -52,10 +51,5 @@ class ExerciseTemplate extends Model
     public function organization(): BelongsTo
     {
         return $this->belongsTo(Organization::class);
-    }
-
-    public function type(): BelongsTo
-    {
-        return $this->belongsTo(ExerciseType::class, 'exercise_type_id');
     }
 }

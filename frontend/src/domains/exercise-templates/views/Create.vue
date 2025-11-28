@@ -1,15 +1,13 @@
 <script setup>
-import { onMounted, ref } from 'vue'
-import { useRouter } from 'vue-router'
-import { useVuelidate } from '@vuelidate/core'
-import { ExerciseTemplate } from '@/domains/exercise-templates/models/ExerciseTemplate.js'
-import { useExerciseTemplateStore } from '@/domains/exercise-templates/stores/exerciseTemplate.js'
-import { useExerciseTypeStore } from '@/domains/exercise-types/stores/exerciseType.js'
+import {onMounted, ref} from 'vue'
+import {useRouter} from 'vue-router'
+import {useVuelidate} from '@vuelidate/core'
+import {ExerciseTemplate} from '@/domains/exercise-templates/models/ExerciseTemplate.js'
+import {useExerciseTemplateStore} from '@/domains/exercise-templates/stores/exerciseTemplate.js'
 import ExerciseTemplateDetailsForm from '@/domains/exercise-templates/components/ExerciseTemplateDetailsForm.vue'
 
 const router = useRouter()
 const templateStore = useExerciseTemplateStore()
-const exerciseTypeStore = useExerciseTypeStore()
 
 const form = ref(new ExerciseTemplate())
 const formId = 'exercise-template-form-create'
@@ -22,8 +20,8 @@ const $v = useVuelidate(ExerciseTemplate.validationRules(), form)
 const fetchLookups = async () => {
   loadingTypes.value = true
   try {
-    const types = await exerciseTypeStore.allList()
-    typeOptions.value = types
+    // TODO: вернуть тип (константы)
+    // typeOptions.value = await exerciseTypeStore.allList()
   } finally {
     loadingTypes.value = false
   }

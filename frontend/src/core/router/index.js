@@ -178,44 +178,6 @@ const routes = [
         }
     },
 
-    // Exercise Types
-    {
-        path: '/exercise-types',
-        name: 'exercise-types',
-        component: () => import('@/domains/exercise-types/views/Index.vue'),
-        meta: {
-            layout: 'dashboard',
-            title: 'Типы упражнений'
-        }
-    },
-    {
-        path: '/exercise-types/create',
-        name: 'exercise-type-create',
-        component: () => import('@/domains/exercise-types/views/Create.vue'),
-        meta: {
-            layout: 'dashboard',
-            title: 'Создание типа упражнения'
-        }
-    },
-    {
-        path: '/exercise-types/:uuid',
-        name: 'exercise-type-show',
-        component: () => import('@/domains/exercise-types/views/Show.vue'),
-        meta: {
-            layout: 'dashboard',
-            title: 'Просмотр типа упражнения'
-        }
-    },
-    {
-        path: '/exercise-types/:uuid/update',
-        name: 'exercise-type-update',
-        component: () => import('@/domains/exercise-types/views/Update.vue'),
-        meta: {
-            layout: 'dashboard',
-            title: 'Редактирование типа упражнения'
-        }
-    },
-
     // Exercise Templates
     {
         path: '/exercise-templates',

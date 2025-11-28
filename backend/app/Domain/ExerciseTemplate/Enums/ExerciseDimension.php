@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Domain\ExerciseType\Enums;
+namespace App\Domain\ExerciseTemplate\Enums;
 
 enum ExerciseDimension: string
 {

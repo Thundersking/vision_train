@@ -13,30 +13,30 @@ return new class extends Migration
             $table->id();
             $table->uuid()->default(DB::raw('uuid_generate_v4()'))->unique();
             $table->unsignedBigInteger('organization_id');
-            $table->unsignedBigInteger('exercise_type_id');
-            $table->string('title');
-            $table->string('short_description')->nullable();
-            $table->string('difficulty')->nullable();
+            $table->string('exercise_type')->comment('Тип упражнения');
+            $table->string('name');
+            $table->text('description')->nullable();
+            $table->string('difficulty')->nullable()->comment('Уровень сложности упражнения');
 
-            $table->unsignedInteger('ball_count')->nullable();
-            $table->unsignedInteger('ball_size')->nullable();
-            $table->unsignedInteger('target_accuracy_percent')->nullable();
-            $table->string('vertical_area')->nullable();
-            $table->string('horizontal_area')->nullable();
-            $table->string('distance_area')->nullable();
-            $table->string('speed')->nullable();
+            $table->unsignedInteger('ball_count')->nullable()->comment('Количество шариков');
+            $table->unsignedInteger('ball_size')->nullable()->comment('Размер шариков');
+            $table->unsignedInteger('target_accuracy_percent')->nullable()->comment('Целевая точность в процентах');
+            $table->string('vertical_area')->nullable()->comment('Вертикальная зона');
+            $table->string('horizontal_area')->nullable()->comment('Горизонтальная зона');
+            $table->string('distance_area')->nullable()->comment('Зона по глубине');
+            $table->string('speed')->nullable()->comment('Скорость выполнения упражнения');
+            $table->string('media_link')->nullable()->comment('Ссылка на видео или медиафайл с инструкцией');
 
-            $table->unsignedInteger('duration_seconds')->default(0);
-            $table->text('instructions')->nullable();
+            $table->unsignedInteger('duration_seconds')->default(60)->comment('Продолжительность упражнения в секундах');
+            $table->text('instructions')->nullable()->comment('Инструкции по выполнению упражнения');
             $table->boolean('is_active')->default(true);
             $table->timestamps();
 
             $table->foreign('organization_id')->references('id')->on('organizations')->onDelete('cascade');
-            $table->foreign('exercise_type_id')->references('id')->on('exercise_types')->onDelete('cascade');
 
-            $table->index(['organization_id', 'exercise_type_id']);
-            $table->index(['organization_id', 'title']);
-            $table->comment('Готовые сценарии упражнений, связанные с типами');
+            $table->index(['organization_id']);
+            $table->index(['organization_id', 'name']);
+            $table->comment('Шаблоны упражнений');
         });
     }
 

@@ -10,16 +10,17 @@ export class ExerciseTemplate extends BaseModel {
         this.title = data.title ?? ''
         this.short_description = data.short_description ?? ''
         this.difficulty = data.difficulty ?? 'medium'
+        this.duration_seconds = data.duration_seconds ?? null
         this.is_active = data.is_active ?? true
         this.instructions = data.instructions ?? ''
 
         this.ball_count = data.ball_count ?? null
         this.ball_size = data.ball_size ?? null
         this.target_accuracy_percent = data.target_accuracy_percent ?? null
-        this.vertical_area = data.vertical_area ?? ''
-        this.horizontal_area = data.horizontal_area ?? ''
-        this.distance_area = data.distance_area ?? ''
-        this.speed = data.speed ?? ''
+        this.vertical_area = data.vertical_area ?? null
+        this.horizontal_area = data.horizontal_area ?? null
+        this.distance_area = data.distance_area ?? null
+        this.speed = data.speed ?? null
     }
 
     toApiFormat() {
@@ -28,6 +29,7 @@ export class ExerciseTemplate extends BaseModel {
             title: this.title,
             short_description: this.short_description || null,
             difficulty: this.difficulty || null,
+            duration_seconds: this.duration_seconds || null,
             is_active: this.is_active,
             instructions: this.instructions || null,
 
@@ -51,36 +53,30 @@ export class ExerciseTemplate extends BaseModel {
                 maxLength: helpers.withMessage('Максимум 255 символов', maxLength(255))
             },
 
+            // Настройки 3D упражнения (необязательные, только для 3D типов)
             ball_count: {
-                required: helpers.withMessage('Укажите количество мячей', required),
                 minValue: helpers.withMessage('Минимум 1', value => value === null || value === '' || value >= 1),
                 maxValue: helpers.withMessage('Максимум 50', value => value === null || value === '' || value <= 50)
             },
             ball_size: {
-                required: helpers.withMessage('Укажите размер мяча', required),
                 minValue: helpers.withMessage('Минимум 1', value => value === null || value === '' || value >= 1),
                 maxValue: helpers.withMessage('Максимум 10', value => value === null || value === '' || value <= 10)
             },
             target_accuracy_percent: {
-                required: helpers.withMessage('Укажите целевую точность', required),
                 minValue: helpers.withMessage('Минимум 1%', value => value === null || value === '' || value >= 1),
                 maxValue: helpers.withMessage('Максимум 100%', value => value === null || value === '' || value <= 100)
             },
             vertical_area: {
-                required: helpers.withMessage('Выберите вертикальную зону', required),
-                validOption: helpers.withMessage('Выберите: full, top или bottom', value => ['full', 'top', 'bottom'].includes(value))
+                validOption: helpers.withMessage('Выберите: full, top или bottom', value => !value || ['full', 'top', 'bottom'].includes(value))
             },
             horizontal_area: {
-                required: helpers.withMessage('Выберите горизонтальную зону', required),
-                validOption: helpers.withMessage('Выберите: full, left или right', value => ['full', 'left', 'right'].includes(value))
+                validOption: helpers.withMessage('Выберите: full, left или right', value => !value || ['full', 'left', 'right'].includes(value))
             },
             distance_area: {
-                required: helpers.withMessage('Выберите зону расстояния', required),
-                validOption: helpers.withMessage('Выберите: full, near, medium или far', value => ['full', 'near', 'medium', 'far'].includes(value))
+                validOption: helpers.withMessage('Выберите: full, near, medium или far', value => !value || ['full', 'near', 'medium', 'far'].includes(value))
             },
             speed: {
-                required: helpers.withMessage('Выберите скорость', required),
-                validOption: helpers.withMessage('Выберите: slow, medium или fast', value => ['slow', 'medium', 'fast'].includes(value))
+                validOption: helpers.withMessage('Выберите: slow, medium или fast', value => !value || ['slow', 'medium', 'fast'].includes(value))
             }
         }
     }

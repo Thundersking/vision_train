@@ -48,6 +48,11 @@ const typeLabel = computed(() => {
   const suffix = type.dimension ? ` (${type.dimension.toUpperCase()})` : ''
   return `${type.name}${suffix}`
 })
+
+const is3DType = computed(() => {
+  return template.value?.type?.dimension === '3d'
+})
+
 const extraPayload = computed(() => {
   const payload = template.value?.extra_payload
   if (!payload || typeof payload !== 'object') {
@@ -96,6 +101,36 @@ const formatValue = (value) => {
         .join('; ')
   }
   return '—'
+}
+
+const formatSpeed = (speed) => {
+  const speedMap = {
+    slow: 'Медленно',
+    medium: 'Средне',
+    fast: 'Быстро'
+  }
+  return speed ? speedMap[speed] || speed : '—'
+}
+
+const formatArea = (area) => {
+  const areaMap = {
+    full: 'Полная',
+    top: 'Верхняя',
+    bottom: 'Нижняя',
+    left: 'Левая',
+    right: 'Правая'
+  }
+  return area ? areaMap[area] || area : '—'
+}
+
+const formatDistanceArea = (area) => {
+  const areaMap = {
+    full: 'Полная',
+    near: 'Близко',
+    medium: 'Средне',
+    far: 'Далеко'
+  }
+  return area ? areaMap[area] || area : '—'
 }
 
 const handleEdit = () => {
@@ -158,6 +193,20 @@ const handleEdit = () => {
             <p v-if="!template.instructions && !extraPayload.length" class="text-sm text-gray-500 mt-4">
               Нет дополнительных параметров
             </p>
+          </section>
+
+          <!-- Настройки 3D упражнения (только для 3D типов) -->
+          <section v-if="is3DType">
+            <h3 class="text-lg font-semibold mb-3">Настройки 3D упражнения</h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <FieldDisplay label="Количество шариков" :value="template.ball_count || '—'"/>
+              <FieldDisplay label="Размер шарика" :value="template.ball_size || '—'"/>
+              <FieldDisplay label="Требуемая точность (%)" :value="template.target_accuracy_percent ? `${template.target_accuracy_percent}%` : '—'"/>
+              <FieldDisplay label="Скорость" :value="formatSpeed(template.speed)"/>
+              <FieldDisplay label="Вертикальная область" :value="formatArea(template.vertical_area)"/>
+              <FieldDisplay label="Горизонтальная область" :value="formatArea(template.horizontal_area)"/>
+              <FieldDisplay label="Область расстояний" :value="formatDistanceArea(template.distance_area)"/>
+            </div>
           </section>
         </div>
 
