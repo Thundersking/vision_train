@@ -36,6 +36,7 @@ return new class extends Migration
 
             $table->index(['organization_id']);
             $table->index(['organization_id', 'name']);
+
             $table->comment('Шаблоны упражнений');
         });
     }
