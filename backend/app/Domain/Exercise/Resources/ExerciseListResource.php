@@ -18,18 +18,14 @@ final class ExerciseListResource extends JsonResource
             'duration_seconds' => $this->duration_seconds,
             'started_at' => $this->started_at,
             'completed_at' => $this->completed_at,
-            'patient' => $this->whenLoaded('patient', function () {
-                return [
-                    'uuid' => $this->patient->uuid,
-                    'full_name' => $this->patient->name,
-                ];
-            }),
-            'template' => $this->whenLoaded('template', function () {
-                return [
-                    'uuid' => $this->template->uuid,
-                    'title' => $this->template->title,
-                ];
-            }),
+            'patient' => $this->patient ? [
+                'uuid' => $this->patient->uuid,
+                'full_name' => $this->patient->name,
+            ] : null,
+            'template' => $this->template ? [
+                'uuid' => $this->template->uuid,
+                'title' => $this->template->title,
+            ] : null,
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
         ];

@@ -6,7 +6,8 @@ export class Exercise extends BaseModel {
         super(data)
 
         this.patient_id = data.patient_id ?? null
-        this.patient_name = data.patient_name ?? (data.patient?.full_name ?? null)
+        // Получаем patient_name из разных источников
+        this.patient_name = data.patient_name ?? data.patient?.full_name ?? null
         this.exercise_template_id = data.exercise_template_id ?? null
         this.exercise_type = data.exercise_type ?? '2d'
         

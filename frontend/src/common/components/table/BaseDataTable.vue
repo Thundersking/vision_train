@@ -27,12 +27,12 @@
               :name="col.slot"
               :row="rowData"
           >
-            {{ rowData[col.field] }}
+            {{ getNestedValue(rowData, col.field) }}
           </slot>
 
           <!-- Дефолтный рендер если нет слота -->
           <template v-else>
-            {{ rowData[col.field] }}
+            {{ getNestedValue(rowData, col.field) }}
           </template>
         </template>
       </Column>
@@ -144,4 +144,16 @@ const onPage = async (e) => {
 
 // Composable для управления данными
 const {data, loading} = usePageData(props.store);
+
+// Функция для получения вложенных значений по точечной нотации
+const getNestedValue = (obj, path) => {
+  if (!path) return null
+  const keys = path.split('.')
+  let value = obj
+  for (const key of keys) {
+    if (value == null) return null
+    value = value[key]
+  }
+  return value
+}
 </script>

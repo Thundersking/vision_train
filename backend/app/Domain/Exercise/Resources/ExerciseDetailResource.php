@@ -37,6 +37,7 @@ final class ExerciseDetailResource extends JsonResource
             'started_at' => $this->started_at,
             'completed_at' => $this->completed_at,
             
+            'patient_id' => $this->patient_id,
             'patient' => $this->whenLoaded('patient', function () {
                 return [
                     'uuid' => $this->patient->uuid,
