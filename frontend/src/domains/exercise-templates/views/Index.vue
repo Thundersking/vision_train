@@ -2,13 +2,14 @@
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { useExerciseTemplateStore } from '@/domains/exercise-templates/stores/exerciseTemplate.js'
+import {DIFFICULTY_LABELS} from "@/domains/exercise-templates/constants/difficulty.js";
 
 const router = useRouter()
 const store = useExerciseTemplateStore()
 
 const columns = ref([
-  { field: 'title', header: 'Название' },
-  { field: 'type', header: 'Тип', slot: 'type' },
+  { field: 'name', header: 'Название' },
+  { field: 'exercise_type', header: 'Тип' },
   { field: 'difficulty', header: 'Сложность', slot: 'difficulty' },
   { field: 'is_active', header: 'Статус', slot: 'status' }
 ])
@@ -36,15 +37,9 @@ const actions = ref([
 
     <Card>
       <BaseDataTable :store="store" :columns="columns" :actions="actions">
-        <template #type="{ row }">
-          <div class="flex flex-col">
-            <span class="font-medium">{{ row.type?.name || '—' }}</span>
-            <small class="text-xs text-gray-500" v-if="row.type?.dimension">{{ row.type.dimension?.toUpperCase() }}</small>
-          </div>
-        </template>
         <template #difficulty="{ row }">
           <Tag
-            :value="row.difficulty || 'Не указана'"
+            :value="DIFFICULTY_LABELS[row.difficulty] || 'Не указана'"
             severity="secondary"
           />
         </template>

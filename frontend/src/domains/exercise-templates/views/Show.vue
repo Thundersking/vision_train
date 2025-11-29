@@ -4,6 +4,10 @@ import {useRoute, useRouter} from 'vue-router'
 import {useExerciseTemplateStore} from '@/domains/exercise-templates/stores/exerciseTemplate.js'
 import {EXERCISE_TEMPLATE_TABS} from '@/domains/exercise-templates/constants/constants.js'
 import {useTabState} from '@/common/composables/useTabState.js'
+import {TYPE_3D} from "@/domains/exercise-templates/constants/type.js";
+import {DIFFICULTY_LABELS} from "@/domains/exercise-templates/constants/difficulty.js";
+import {SPEED_LABELS} from "@/domains/exercise-templates/constants/speed.js";
+import {AREA_LABELS} from "@/domains/exercise-templates/constants/area.js";
 
 const route = useRoute()
 const router = useRouter()
@@ -39,27 +43,8 @@ watch(() => templateUuid.value, (uuid, prev) => {
   loadData()
 })
 
-const typeLabel = computed(() => {
-  const type = template.value?.type
-  if (!type) {
-    return '—'
-  }
-
-  const suffix = type.dimension ? ` (${type.dimension.toUpperCase()})` : ''
-  return `${type.name}${suffix}`
-})
-
 const is3DType = computed(() => {
-  return template.value?.type?.dimension === '3d'
-})
-
-const extraPayload = computed(() => {
-  const payload = template.value?.extra_payload
-  if (!payload || typeof payload !== 'object') {
-    return []
-  }
-
-  return Object.entries(payload).map(([key, value]) => ({key, value}))
+  return template.value?.exercise_type === TYPE_3D
 })
 
 const formattedDuration = computed(() => {
@@ -82,47 +67,6 @@ const formattedDuration = computed(() => {
   return `${minutes} мин ${restSeconds} сек`
 })
 
-const formatValue = (value) => {
-  if (typeof value === 'boolean') {
-    return value ? 'Да' : 'Нет'
-  }
-  if (typeof value === 'number') {
-    return value
-  }
-  if (typeof value === 'string') {
-    return value
-  }
-  if (Array.isArray(value)) {
-    return value.map((item) => (typeof item === 'object' ? JSON.stringify(item) : item)).join(', ')
-  }
-  if (typeof value === 'object' && value !== null) {
-    return Object.entries(value)
-        .map(([k, v]) => `${k}: ${v}`)
-        .join('; ')
-  }
-  return '—'
-}
-
-const formatSpeed = (speed) => {
-  const speedMap = {
-    slow: 'Медленно',
-    medium: 'Средне',
-    fast: 'Быстро'
-  }
-  return speed ? speedMap[speed] || speed : '—'
-}
-
-const formatArea = (area) => {
-  const areaMap = {
-    full: 'Полная',
-    top: 'Верхняя',
-    bottom: 'Нижняя',
-    left: 'Левая',
-    right: 'Правая'
-  }
-  return area ? areaMap[area] || area : '—'
-}
-
 const formatDistanceArea = (area) => {
   const areaMap = {
     full: 'Полная',
@@ -134,14 +78,14 @@ const formatDistanceArea = (area) => {
 }
 
 const handleEdit = () => {
-  router.push({ name: 'exercise-template-update', params: { uuid: templateUuid.value } })
+  router.push({name: 'exercise-template-update', params: {uuid: templateUuid.value}})
 }
 </script>
 
 <template>
   <div class="space-y-6">
     <TitleBlock
-        :title="template?.title || 'Шаблон упражнения'"
+        :title="template?.name || 'Шаблон упражнения'"
         :back-to="{ name: 'exercise-templates' }"
     />
 
@@ -164,11 +108,11 @@ const handleEdit = () => {
             />
           </div>
           <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <FieldDisplay label="Тип упражнения" :value="typeLabel"/>
+            <FieldDisplay label="Тип упражнения" :value="template.exercise_type"/>
             <FieldDisplay
                 label="Сложность"
                 type="tag"
-                :value="template.difficulty || 'Не указана'"
+                :value="DIFFICULTY_LABELS[template.difficulty] || 'Не указана'"
             />
             <FieldDisplay
                 label="Статус"
@@ -179,21 +123,7 @@ const handleEdit = () => {
             <FieldDisplay label="Общая длительность" :value="formattedDuration"/>
           </div>
 
-          <section>
-            <h3 class="text-lg font-semibold mb-3">Основные параметры</h3>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <FieldDisplay label="Инструкции" :value="template.instructions || '—'"/>
-              <FieldDisplay
-                  v-for="detail in extraPayload"
-                  :key="detail.key"
-                  :label="detail.key"
-                  :value="formatValue(detail.value)"
-              />
-            </div>
-            <p v-if="!template.instructions && !extraPayload.length" class="text-sm text-gray-500 mt-4">
-              Нет дополнительных параметров
-            </p>
-          </section>
+          <FieldDisplay label="Инструкции" :value="template.instructions || '—'"/>
 
           <!-- Настройки 3D упражнения (только для 3D типов) -->
           <section v-if="is3DType">
@@ -201,10 +131,11 @@ const handleEdit = () => {
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
               <FieldDisplay label="Количество шариков" :value="template.ball_count || '—'"/>
               <FieldDisplay label="Размер шарика" :value="template.ball_size || '—'"/>
-              <FieldDisplay label="Требуемая точность (%)" :value="template.target_accuracy_percent ? `${template.target_accuracy_percent}%` : '—'"/>
-              <FieldDisplay label="Скорость" :value="formatSpeed(template.speed)"/>
-              <FieldDisplay label="Вертикальная область" :value="formatArea(template.vertical_area)"/>
-              <FieldDisplay label="Горизонтальная область" :value="formatArea(template.horizontal_area)"/>
+              <FieldDisplay label="Требуемая точность (%)"
+                            :value="template.target_accuracy_percent ? `${template.target_accuracy_percent}%` : '—'"/>
+              <FieldDisplay label="Скорость" :value="SPEED_LABELS[template.speed]"/>
+              <FieldDisplay label="Вертикальная область" :value="AREA_LABELS[template.vertical_area]"/>
+              <FieldDisplay label="Горизонтальная область" :value="AREA_LABELS[template.horizontal_area]"/>
               <FieldDisplay label="Область расстояний" :value="formatDistanceArea(template.distance_area)"/>
             </div>
           </section>

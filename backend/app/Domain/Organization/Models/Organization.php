@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace App\Domain\Organization\Models;
 
+use App\Domain\AuditLog\Models\AuditLog;
 use App\Domain\Department\Models\Department;
 use App\Domain\Device\Models\Device;
 use App\Domain\Organization\Enums\OrganizationType;
 use App\Domain\Patient\Models\Patient;
-use App\Domain\Shared\Models\AuditLog;
 use App\Domain\User\Models\User;
 use App\Support\Traits\HasUuid;
 use Illuminate\Database\Eloquent\Factories\HasFactory;

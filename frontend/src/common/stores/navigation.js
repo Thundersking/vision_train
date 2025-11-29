@@ -44,7 +44,7 @@ export const useNavigationStore = defineStore('navigation', () => {
     },
     {
       id: 'exercises',
-      title: 'Упражнения',
+      title: 'Назначения упражнений',
       icon: 'exercises',
       route: '/exercises'
     },

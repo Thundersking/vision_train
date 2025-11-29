@@ -15,36 +15,22 @@ class ExerciseTemplateRepository extends BaseRepository
         return ExerciseTemplate::class;
     }
 
-    protected function newQuery(): Builder
-    {
-        return parent::newQuery()->with('type');
-    }
-
     protected function applyFilters(Builder $query, array $filters): void
     {
         if (!empty($filters['search'])) {
             $search = trim((string) $filters['search']);
             $query->where(function (Builder $builder) use ($search) {
-                $builder->where('title', 'ilike', "%{$search}%")
-                    ->orWhere('short_description', 'ilike', "%{$search}%");
+                $builder->where('name', 'ilike', "%{$search}%")
+                    ->orWhere('description', 'ilike', "%{$search}%");
             });
         }
 
-        if (!empty($filters['exercise_type_id'])) {
-            $query->where('exercise_type_id', (int) $filters['exercise_type_id']);
+        if (!empty($filters['exercise_type'])) {
+            $query->where('exercise_type', $filters['exercise_type']);
         }
 
         if (isset($filters['is_active'])) {
             $query->where('is_active', (bool) $filters['is_active']);
         }
     }
-
-    public function findWithRelations(string $uuid, array $relations = []): ?ExerciseTemplate
-    {
-        return $this->newQuery()
-            ->with($relations)
-            ->where('uuid', $uuid)
-            ->first();
-    }
-
 }

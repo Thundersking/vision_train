@@ -12,7 +12,7 @@ final class ExerciseTemplateSearchRequest extends FormSearchRequest
     {
         return [
             'search' => ['sometimes', 'string', 'max:255'],
-            'exercise_type_id' => ['sometimes', 'integer', 'exists:exercise_types,id'],
+            'exercise_type' => ['sometimes', 'string'],
             'is_active' => ['sometimes', 'boolean'],
         ];
     }

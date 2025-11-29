@@ -13,19 +13,12 @@ final class ExerciseTemplateListResource extends JsonResource
     {
         return [
             'uuid' => $this->uuid,
-            'title' => $this->title,
-            'short_description' => $this->short_description,
+            'name' => $this->name,
+            'exercise_type' => $this->exercise_type,
+            'description' => $this->description,
             'difficulty' => $this->difficulty,
             'is_active' => $this->is_active,
             'duration_seconds' => $this->duration_seconds,
-            'type' => $this->whenLoaded('type', function () {
-                return [
-                    'id' => $this->type->id,
-                    'uuid' => $this->type->uuid,
-                    'name' => $this->type->name,
-                    'dimension' => $this->type->dimension,
-                ];
-            }),
             'updated_at' => $this->updated_at,
             'created_at' => $this->created_at,
         ];

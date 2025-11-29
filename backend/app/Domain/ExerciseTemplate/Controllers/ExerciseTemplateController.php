@@ -7,6 +7,7 @@ namespace App\Domain\ExerciseTemplate\Controllers;
 use App\Domain\ExerciseTemplate\Actions\CreateExerciseTemplateAction;
 use App\Domain\ExerciseTemplate\Actions\DeleteExerciseTemplateAction;
 use App\Domain\ExerciseTemplate\Actions\UpdateExerciseTemplateAction;
+use App\Domain\ExerciseTemplate\Models\ExerciseTemplate;
 use App\Domain\ExerciseTemplate\Repositories\ExerciseTemplateRepository;
 use App\Domain\ExerciseTemplate\Requests\ExerciseTemplateSearchRequest;
 use App\Domain\ExerciseTemplate\Requests\StoreExerciseTemplateRequest;
@@ -39,7 +40,7 @@ final class ExerciseTemplateController extends Controller
 
     public function allList(): JsonResponse
     {
-        $list = $this->repository->allList('title');
+        $list = $this->repository->allList();
 
         return response()->json([
             'data' => $list,
@@ -49,7 +50,7 @@ final class ExerciseTemplateController extends Controller
 
     public function show(string $uuid): ExerciseTemplateDetailResource
     {
-        $template = $this->repository->findWithRelations($uuid, ['type']);
+        $template = $this->repository->findByUuid($uuid);
 
         if (!$template) {
             throw new ModelNotFoundException();
@@ -73,7 +74,8 @@ final class ExerciseTemplateController extends Controller
      */
     public function update(string $uuid, UpdateExerciseTemplateRequest $request, UpdateExerciseTemplateAction $action): ExerciseTemplateDetailResource
     {
-        $template = $this->repository->findWithRelations($uuid, ['type']);
+        /** @var ExerciseTemplate $template */
+        $template = $this->repository->findByUuid($uuid);
 
         if (!$template) {
             throw new ModelNotFoundException();

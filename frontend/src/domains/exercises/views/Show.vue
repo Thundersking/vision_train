@@ -7,6 +7,7 @@ import {useTabState} from '@/common/composables/useTabState.js'
 import {useErrorHandler} from '@/common/composables/useErrorHandler.js'
 import {formatDateTime} from '@/common/utils/date.js'
 import ExerciseResultsPanel from '@/domains/exercises/components/ExerciseResultsPanel.vue'
+import {TYPE_3D} from "@/domains/exercise-templates/constants/type.js";
 
 const route = useRoute()
 const router = useRouter()
@@ -100,7 +101,7 @@ const formattedDuration = computed(() => {
             <FieldDisplay label="Завершение" :value="formatDateTime(exercise.completed_at)"/>
           </div>
 
-          <section v-if="exercise.exercise_type === '3d'" class="border-t border-slate-200 dark:border-slate-700 pt-6">
+          <section v-if="exercise.exercise_type === TYPE_3D" class="border-t border-slate-200 dark:border-slate-700 pt-6">
             <h3 class="text-lg font-semibold mb-3">Настройки 3D упражнения</h3>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
               <FieldDisplay label="Количество шариков" :value="exercise.ball_count || '—'"/>

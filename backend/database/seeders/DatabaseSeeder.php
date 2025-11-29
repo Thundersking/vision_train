@@ -20,6 +20,7 @@ class DatabaseSeeder extends Seeder
             PermissionSeeder::class, // Сначала разрешения
             RoleSeeder::class,       // Потом роли с назначением разрешений
             UserSeeder::class,       // Затем пользователи с назначением ролей
+            ExerciseTemplateSeeder::class,
         ]);
     }
 }

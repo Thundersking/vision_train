@@ -2,8 +2,8 @@
 
 namespace App\Domain\Shared\Traits;
 
+use App\Domain\AuditLog\Models\AuditLog;
 use App\Domain\Shared\Enums\AuditActionType;
-use App\Domain\Shared\Models\AuditLog;
 use Spatie\Multitenancy\Models\Tenant;
 
 trait RecordsAuditLog
@@ -20,9 +20,6 @@ trait RecordsAuditLog
         ?array $newData = null
     ): void {
         $organizationId = $this->getOrganizationId($entity);
-
-        $entityName = strtolower(class_basename($entity));
-        $actionType = "{$entityName}.{$action->value}";
 
         if ($oldData !== null && $newData !== null) {
             $oldData = $this->excludeFields($oldData, $entity);
@@ -43,7 +40,7 @@ trait RecordsAuditLog
         AuditLog::create([
             'organization_id' => $organizationId,
             'user_id' => auth()->id(),
-            'action_type' => $actionType,
+            'action_type' => $action->value,
             'entity_type' => class_basename($entity),
             'entity_id' => $entity->id,
             'old_values' => $oldData,
@@ -54,6 +51,11 @@ trait RecordsAuditLog
         ]);
     }
 
+    /**
+     * TODO: доработать
+     * @param $entity
+     * @return int|null
+     */
     protected function getOrganizationId($entity = null): ?int
     {
         // Spatie Multitenancy — стандартный способ
@@ -82,7 +84,8 @@ trait RecordsAuditLog
             return (int) $userOrganizationId;
         }
 
-        return null;
+        // TODO: возвращаю по умолчанию organizaion_id = 1 - системная организация
+        return 1;
     }
 
     private function excludeFields(array $data, object $entity): array

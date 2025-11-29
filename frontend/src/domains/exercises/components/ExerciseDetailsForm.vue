@@ -1,7 +1,10 @@
 <script setup>
 import {computed} from 'vue'
 import {usePatientStore} from '@/domains/patients/stores/patient.js'
-import {EXERCISE_TYPE_OPTIONS, VERTICAL_AREA_OPTIONS, HORIZONTAL_AREA_OPTIONS, DISTANCE_AREA_OPTIONS, SPEED_OPTIONS} from '@/domains/exercises/constants/constants.js'
+import {VERTICAL_AREA_OPTIONS, HORIZONTAL_AREA_OPTIONS} from '@/domains/exercises/constants/constants.js'
+import {EXERCISE_TYPE_OPTIONS, TYPE_3D} from "@/domains/exercise-templates/constants/type.js";
+import {SPEED_OPTIONS} from "@/domains/exercise-templates/constants/speed.js";
+import {DISTANCE_AREA_OPTIONS} from "@/domains/exercise-templates/constants/distanceArea.js";
 
 const props = defineProps({
   validation: {
@@ -22,7 +25,7 @@ const form = defineModel({
 const patientStore = usePatientStore()
 
 const is3DType = computed(() => {
-  return form.value.exercise_type === '3d'
+  return form.value.exercise_type === TYPE_3D
 })
 </script>
 

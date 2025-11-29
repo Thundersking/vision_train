@@ -11,9 +11,9 @@ final class StoreExerciseTemplateRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'exercise_type_id' => ['required', 'integer', 'exists:exercise_types,id'],
-            'title' => ['required', 'string', 'max:255'],
-            'short_description' => ['nullable', 'string', 'max:500'],
+            'exercise_type' => ['required', 'string'],
+            'name' => ['required', 'string', 'max:255'],
+            'description' => ['nullable', 'string', 'max:500'],
             'difficulty' => ['nullable', 'string', 'max:100'],
             'duration_seconds' => ['nullable', 'integer', 'min:1'],
             'instructions' => ['nullable', 'string'],

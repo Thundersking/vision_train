@@ -94,8 +94,8 @@ export const useExerciseTemplateStore = defineStore('exercise-templates', {
         },
 
         /**
-         * Получить короткий список шаблонов (id, title) для выпадающих списков
-         * @returns {Promise<Array>} - массив объектов {id, title}
+         * Получить короткий список шаблонов (id, name) для выпадающих списков
+         * @returns {Promise<Array>} - массив объектов {id, name}
          */
         async allList() {
             this.loading = true

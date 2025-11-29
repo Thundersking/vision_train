@@ -6,9 +6,9 @@ export class ExerciseTemplate extends BaseModel {
     constructor(data = {}) {
         super(data)
 
-        this.exercise_type_id = data.exercise_type_id ?? data.type?.id ?? null
-        this.title = data.title ?? ''
-        this.short_description = data.short_description ?? ''
+        this.exercise_type = data.exercise_type ?? ''
+        this.name = data.name ?? ''
+        this.description = data.description ?? ''
         this.difficulty = data.difficulty ?? 'medium'
         this.duration_seconds = data.duration_seconds ?? null
         this.is_active = data.is_active ?? true
@@ -25,9 +25,9 @@ export class ExerciseTemplate extends BaseModel {
 
     toApiFormat() {
         return {
-            exercise_type_id: this.exercise_type_id,
-            title: this.title,
-            short_description: this.short_description || null,
+            exercise_type: this.exercise_type,
+            name: this.name,
+            description: this.description || null,
             difficulty: this.difficulty || null,
             duration_seconds: this.duration_seconds || null,
             is_active: this.is_active,
@@ -45,10 +45,10 @@ export class ExerciseTemplate extends BaseModel {
 
     static validationRules() {
         return {
-            exercise_type_id: {
+            exercise_type: {
                 required: helpers.withMessage('Укажите тип упражнения', required)
             },
-            title: {
+            name: {
                 required: helpers.withMessage('Название обязательно', required),
                 maxLength: helpers.withMessage('Максимум 255 символов', maxLength(255))
             },

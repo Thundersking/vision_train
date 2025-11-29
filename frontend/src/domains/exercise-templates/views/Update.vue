@@ -17,19 +17,8 @@ const formId = 'exercise-template-form-update'
 const isSubmitting = ref(false)
 const loading = ref(false)
 const loadingTypes = ref(false)
-const typeOptions = ref([])
 
 const $v = useVuelidate(ExerciseTemplate.validationRules(), form)
-
-const fetchLookups = async () => {
-  loadingTypes.value = true
-  try {
-    // TODO: вернуть тип (константы)
-    // typeOptions.value = await exerciseTypeStore.allList()
-  } finally {
-    loadingTypes.value = false
-  }
-}
 
 const loadTemplate = async () => {
   if (!route.params.uuid) {
@@ -48,7 +37,7 @@ const loadTemplate = async () => {
 }
 
 onMounted(async () => {
-  await Promise.all([fetchLookups(), loadTemplate()])
+  await Promise.all([loadTemplate()])
 })
 
 const handleFormSubmit = async () => {
@@ -96,7 +85,6 @@ const handleSuccess = () => {
         <ExerciseTemplateDetailsForm
           v-model="form"
           :validation="$v"
-          :type-options="typeOptions"
         />
       </BaseForm>
     </Card>

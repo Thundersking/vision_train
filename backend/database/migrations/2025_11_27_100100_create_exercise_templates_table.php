@@ -12,7 +12,6 @@ return new class extends Migration
         Schema::create('exercise_templates', function (Blueprint $table) {
             $table->id();
             $table->uuid()->default(DB::raw('uuid_generate_v4()'))->unique();
-            $table->unsignedBigInteger('organization_id');
             $table->string('exercise_type')->comment('Тип упражнения');
             $table->string('name');
             $table->text('description')->nullable();
@@ -25,17 +24,14 @@ return new class extends Migration
             $table->string('horizontal_area')->nullable()->comment('Горизонтальная зона');
             $table->string('distance_area')->nullable()->comment('Зона по глубине');
             $table->string('speed')->nullable()->comment('Скорость выполнения упражнения');
-            $table->string('media_link')->nullable()->comment('Ссылка на видео или медиафайл с инструкцией');
-
             $table->unsignedInteger('duration_seconds')->default(60)->comment('Продолжительность упражнения в секундах');
+
+            $table->string('media_link')->nullable()->comment('Ссылка на видео или медиафайл с инструкцией');
             $table->text('instructions')->nullable()->comment('Инструкции по выполнению упражнения');
             $table->boolean('is_active')->default(true);
             $table->timestamps();
 
-            $table->foreign('organization_id')->references('id')->on('organizations')->onDelete('cascade');
-
-            $table->index(['organization_id']);
-            $table->index(['organization_id', 'name']);
+            $table->index(['name']);
 
             $table->comment('Шаблоны упражнений');
         });

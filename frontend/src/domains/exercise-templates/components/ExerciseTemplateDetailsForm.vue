@@ -1,15 +1,12 @@
 <script setup>
 import { computed } from 'vue'
-import { DIFFICULTY_OPTIONS } from '@/domains/exercise-templates/constants/constants.js'
+import {EXERCISE_TYPE_OPTIONS, TYPE_3D} from "@/domains/exercise-templates/constants/type.js";
+import {DIFFICULTY_OPTIONS} from "@/domains/exercise-templates/constants/difficulty.js";
 
 const props = defineProps({
   validation: {
     type: Object,
     default: null
-  },
-  typeOptions: {
-    type: Array,
-    default: () => []
   }
 })
 
@@ -18,16 +15,8 @@ const form = defineModel({
   required: true
 })
 
-// Определяем, является ли выбранный тип упражнения 3D
-const selectedType = computed(() => {
-  if (!form.value.exercise_type_id || !props.typeOptions.length) {
-    return null
-  }
-  return props.typeOptions.find(type => type.id === form.value.exercise_type_id)
-})
-
 const is3DType = computed(() => {
-  return selectedType.value?.dimension === '3d'
+  return form.value.exercise_type === TYPE_3D
 })
 
 // Опции для выбора областей и скорости
@@ -62,11 +51,9 @@ const SPEED_OPTIONS = [
     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
       <FormSelect
         v-model="form"
-        name="exercise_type_id"
+        name="exercise_type"
         label="Тип упражнения"
-        :options="typeOptions"
-        optionLabel="name"
-        optionValue="id"
+        :options="EXERCISE_TYPE_OPTIONS"
         placeholder="Выберите тип"
         required
         :validation="validation"
@@ -74,7 +61,7 @@ const SPEED_OPTIONS = [
 
       <FormInput
         v-model="form"
-        name="title"
+        name="name"
         label="Название"
         placeholder="Например, Тренажёр сетки"
         required

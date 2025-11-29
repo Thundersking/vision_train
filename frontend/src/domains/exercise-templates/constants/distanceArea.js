@@ -1,0 +1,18 @@
+export const DISTANCE_AREA_FULL = 'full'
+export const DISTANCE_AREA_NEAR = 'near'
+export const DISTANCE_AREA_MEDIUM = 'medium'
+export const DISTANCE_AREA_FAR = 'far'
+
+export const DISTANCE_AREA_LABELS = {
+    [DISTANCE_AREA_FULL]: 'Полная',
+    [DISTANCE_AREA_NEAR]: 'Близко',
+    [DISTANCE_AREA_MEDIUM]: 'Средне',
+    [DISTANCE_AREA_FAR]: 'Далеко',
+}
+
+export const DISTANCE_AREA_OPTIONS = [
+    {label: DISTANCE_AREA_LABELS[DISTANCE_AREA_FULL], value: DISTANCE_AREA_FULL},
+    {label: DISTANCE_AREA_LABELS[DISTANCE_AREA_NEAR], value: DISTANCE_AREA_NEAR},
+    {label: DISTANCE_AREA_LABELS[DISTANCE_AREA_MEDIUM], value: DISTANCE_AREA_MEDIUM},
+    {label: DISTANCE_AREA_LABELS[DISTANCE_AREA_FAR], value: DISTANCE_AREA_FAR},
+]
